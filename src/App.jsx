@@ -4,12 +4,11 @@ import CustomFileInput from "./components/CustomFileInput";
 import SingleMember from "./components/SingleMember";
 import "./styles.css";
 import { shareFlightsByMembers } from "./utils/shareFlightsByMembers";
+import SelectInput from "./components/CustomSelectElement";
 
 function App() {
   const [data, setData] = useState([]);
   const [members, setMembers] = useState(1);
-
-  const tableRef = useRef();
 
   const handleFileUpload = (e) => {
     const reader = new FileReader();
@@ -27,14 +26,6 @@ function App() {
     };
   };
 
-  const xport = useCallback(() => {
-    /* Create worksheet from HTML DOM TABLE */
-    const wb = XLSX.utils.table_to_book(tableRef.current);
-
-    /* Export to file (start a download) */
-    XLSX.writeFile(wb, "SheetJSTable.xlsx");
-  });
-
   const membersData = useMemo(() => {
     if (data?.length > 0) {
       return shareFlightsByMembers(data.slice(1), members);
@@ -43,54 +34,26 @@ function App() {
   }, [members, data]);
 
   const onSelect = (v) => {
-    console.log("ev2: ", v.target.value);
     setMembers(v.target.value);
   };
-
-  console.log("membersData usememo: ", membersData);
 
   return (
     <div className="text-center text-blue-900">
       <div className="text-blue-900">
-        <CustomFileInput
-          onChange={() => {}}
-          handleFileUpload={handleFileUpload}
-        />
-        <div
-          style={{
-            display: "inline-block",
-          }}
-        >
-          <select onChange={onSelect}>
-            <option value={"1"}>1</option>
-            <option value={"2"}>2</option>
-            <option value={"3"}>3</option>
-            <option value={"4"}>4</option>
-          </select>
-          <button onClick={xport}>
-            <b className="text-red">Allocate</b>
-          </button>
-        </div>
+        <CustomFileInput handleFileUpload={handleFileUpload} />
 
-        <div>
-          <button onClick={xport}>
-            <b className="text-red">Export XLSX!</b>
-          </button>
-        </div>
+        <SelectInput onSelect={onSelect} disabled={!data?.length} />
       </div>
       {Object.keys(membersData)?.length
-        ? Object.keys(membersData).map((singleMember, idx) => (
+        ? Object.keys(membersData).map((singleMember) => (
             <SingleMember
               key={singleMember}
               headers={data[0]}
-              ref={tableRef}
+              member={singleMember}
               data={membersData[singleMember]}
             />
           ))
         : null}
-      <br />
-      <br />
-      ... webstylepress ...
     </div>
   );
 }

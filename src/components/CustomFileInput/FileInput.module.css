@@ -1,0 +1,51 @@
+/* FileInput.module.css */
+
+/* Container for the file input */
+.fileInputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* Hide the default file input */
+.fileInput {
+  display: none;
+}
+
+/* Custom button to trigger file input */
+.fileInputButton {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+/* Hover effect for the button */
+.fileInputButton:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+/* Focus effect for the button */
+.fileInputButton:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(72, 185, 72, 0.8);
+}
+
+/* Label for the input, styled for a better user experience */
+.fileInputLabel {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+  text-align: center;
+  display: block;
+  font-weight: bold;
+  margin-left: 8px;
+}

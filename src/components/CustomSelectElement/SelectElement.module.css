@@ -1,0 +1,59 @@
+/* Container for the select dropdown */
+.selectContainer {
+  position: relative;
+  width: 200px;
+  margin: 20px auto; /* Center horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style for the select element */
+.selectElement {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #f1f1f1;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  color: #555;
+  cursor: pointer;
+  transition: border 0.3s ease, background-color 0.3s ease;
+  -webkit-appearance: none; /* Remove default appearance in webkit browsers */
+  -moz-appearance: none; /* Remove default appearance in Firefox */
+  appearance: none; /* Remove default appearance */
+}
+
+/* Add a custom arrow using a pseudo element */
+.selectElement::after {
+  content: "▼";
+  font-size: 16px;
+  color: #555;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Hover effect for select element */
+.selectElement:hover {
+  background-color: #e9e9e9;
+  border-color: #4caf50;
+}
+
+/* Focus effect for select element */
+.selectElement:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(72, 185, 72, 0.8);
+}
+
+/* Style the option elements */
+.selectElement option {
+  padding: 12px;
+  background-color: white;
+  color: #555;
+  font-size: 16px;
+}

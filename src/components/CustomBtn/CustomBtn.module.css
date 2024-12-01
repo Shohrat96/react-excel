@@ -1,0 +1,32 @@
+/* Button Container */
+.customButton {
+  padding: 12px 20px;
+  background-color: #4caf50; /* Green background */
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Hover effect */
+.customButton:hover {
+  background-color: #45a049; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge */
+}
+
+/* Focus effect */
+.customButton:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(72, 185, 72, 0.8); /* Green focus glow */
+}
+
+/* Active effect */
+.customButton:active {
+  background-color: #3e8e41; /* Even darker green */
+  transform: scale(0.98); /* Slightly shrink when clicked */
+}

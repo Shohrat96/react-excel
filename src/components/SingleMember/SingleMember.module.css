@@ -1,0 +1,48 @@
+/* FlightsTable.module.css */
+
+/* General styling for the table */
+.flightsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f9f9f9;
+}
+
+.flightsTable th,
+.flightsTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.flightsTable th {
+  background-color: #4caf50;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.flightsTable td {
+  background-color: #fff;
+  color: #555;
+}
+
+/* Add alternating row colors */
+.flightsTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Hover effect for rows */
+.flightsTable tr:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+/* Style for table header on mobile */
+@media screen and (max-width: 768px) {
+  .flightsTable th,
+  .flightsTable td {
+    padding: 8px 10px;
+  }
+}
