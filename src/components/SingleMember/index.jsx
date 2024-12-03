@@ -15,7 +15,7 @@ const SingleMember = ({ data, headers, member }) => {
   });
 
   return (
-    <>
+    <div className={styles.tableContainer}>
       <div>
         <CustomButton title="Export XLSX!" handleClick={xport} />
       </div>
@@ -37,7 +37,7 @@ const SingleMember = ({ data, headers, member }) => {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

@@ -1,6 +1,9 @@
 /* FlightsTable.module.css */
 
 /* General styling for the table */
+.tableContainer {
+  flex: 1;
+}
 .flightsTable {
   width: 100%;
   border-collapse: collapse;

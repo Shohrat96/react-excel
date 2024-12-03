@@ -2,7 +2,7 @@
 .selectContainer {
   position: relative;
   width: 200px;
-  margin: 20px auto; /* Center horizontally */
+  margin-block: 20px; /* Center horizontally */
   display: flex;
   justify-content: center;
   align-items: center;
