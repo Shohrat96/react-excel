@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useMemo } from "react";
 import * as XLSX from "xlsx";
 import CustomFileInput from "./components/CustomFileInput";
 import SingleMember from "./components/SingleMember";
-import "./styles.css";
+import styles from "./App.module.css";
 import { shareFlightsByMembers } from "./utils/shareFlightsByMembers";
 import SelectInput from "./components/CustomSelectElement";
 
@@ -38,22 +38,24 @@ function App() {
   };
 
   return (
-    <div className="text-center text-blue-900">
-      <div className="text-blue-900">
+    <div>
+      <div>
         <CustomFileInput handleFileUpload={handleFileUpload} />
 
         <SelectInput onSelect={onSelect} disabled={!data?.length} />
       </div>
-      {Object.keys(membersData)?.length
-        ? Object.keys(membersData).map((singleMember) => (
-            <SingleMember
-              key={singleMember}
-              headers={data[0]}
-              member={singleMember}
-              data={membersData[singleMember]}
-            />
-          ))
-        : null}
+      <div className={styles.flightTableWrapper}>
+        {Object.keys(membersData)?.length
+          ? Object.keys(membersData).map((singleMember) => (
+              <SingleMember
+                key={singleMember}
+                headers={data[0]}
+                member={singleMember}
+                data={membersData[singleMember]}
+              />
+            ))
+          : null}
+      </div>
     </div>
   );
 }
