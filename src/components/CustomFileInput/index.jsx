@@ -7,6 +7,7 @@ const FileInput = ({ handleFileUpload }) => {
       {/* File input hidden by default, but triggered by custom button */}
       <input
         type="file"
+        multiple
         accept=".xlsx, .xls"
         onChange={handleFileUpload}
         className={styles.fileInput}
