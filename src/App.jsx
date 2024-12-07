@@ -22,37 +22,37 @@ function App() {
           const sheet = workbook.Sheets[sheetName];
           const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-          const date = parsedData[1]["__EMPTY_1"].split(" ")[1]
+          const date = parsedData[1]["__EMPTY_1"].split(" ")[1];
 
-          
           let clearedData = parsedData.filter((item) => {
-            return Object.keys(item).length >= 7 && !item["__EMPTY_3"].includes("LY-");
+            return (
+              Object.keys(item).length >= 7 &&
+              !item["__EMPTY_3"].includes("LY-")
+            );
           });
           clearedData = clearedData.map((item, idx) => {
-            if (idx > 0) {
-              return {
-                date,
-                ...item
-              }
-            } return {
-              date: "Date",
-              ...item,
+            return {
+              date: idx > 0 ? date : "Date",
+              flight_number: item["__EMPTY_1"],
+              aircraft_type: item["__EMPTY_2"],
+              reg_number: item["__EMPTY_3"],
+              departure: item["__EMPTY_4"],
+              etd: item["__EMPTY_6"],
+              destination: item["__EMPTY_7"],
+              eta: item["__EMPTY_8"],
+            };
+          });
 
-            }
-          })
-          
           resolve(idx === 0 ? clearedData : clearedData.slice(1));
         };
 
         reader.readAsBinaryString(file);
+      });
+    });
 
-      })
-    })
-
-    Promise.all(filePromises).then(allData => {
-      setData(allData.flat())
-    })
- 
+    Promise.all(filePromises).then((allData) => {
+      setData(allData.flat());
+    });
   };
 
   const membersData = useMemo(() => {

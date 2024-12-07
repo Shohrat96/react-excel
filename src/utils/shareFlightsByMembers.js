@@ -12,12 +12,15 @@ export const shareFlightsByMembers = (flights, memberCount) => {
   let startIdx = 0;
   let endIdx = flights.length - 1;
 
-  if (+flights[0]["__EMPTY_1"] !== +flights[1]["__EMPTY_1"] - 1) {
+  if (+flights[0]["flight_number"] !== +flights[1]["flight_number"] - 1) {
     startIdx = 1;
     res["member1"].push(flights[0]);
   }
 
-  if (+flights[endIdx]["__EMPTY_1"] !== +flights[endIdx - 1]["__EMPTY_1"] + 1) {
+  if (
+    +flights[endIdx]["flight_number"] !==
+    +flights[endIdx - 1]["flight_number"] + 1
+  ) {
     endIdx = endIdx - 1;
   }
 
