@@ -1,10 +1,10 @@
 import { useState } from "react";
 import styles from "./CustomBtn.module.css";
 
-function CustomButton({ handleClick, title }) {
+function CustomButton({ handleClick, title, disabled }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleExport = () => {
+  const onClick = () => {
     // setIsLoading(true);
     handleClick(); // Call your export function
     // setTimeout(() => setIsLoading(false), 2000); // Simulate export duration
@@ -12,12 +12,13 @@ function CustomButton({ handleClick, title }) {
 
   return (
     <button
-      onClick={handleExport}
+      onClick={onClick}
       className={styles.customButton}
-      aria-label="Export Excel File"
+      aria-label={title || "Export Excel File"}
+      disabled={disabled}
       //   disabled={isLoading}
     >
-      {isLoading ? "Exporting..." : title}
+      {isLoading ? "In progress..." : title}
     </button>
   );
 }

@@ -3,3 +3,8 @@
   flex-wrap: wrap;
   gap: 16px;
 }
+.selectAndUpload {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}

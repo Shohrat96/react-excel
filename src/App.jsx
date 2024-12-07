@@ -1,10 +1,13 @@
-import { useState, useCallback, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import * as XLSX from "xlsx";
+import dayjs from 'dayjs';
 import CustomFileInput from "./components/CustomFileInput";
 import SingleMember from "./components/SingleMember";
 import styles from "./App.module.css";
 import { shareFlightsByMembers } from "./utils/shareFlightsByMembers";
 import SelectInput from "./components/CustomSelectElement";
+import CustomButton from "./components/CustomBtn";
+import uploadFlightList from "./api/uploadFlightList";
 
 function App() {
   const [data, setData] = useState([]);
@@ -32,7 +35,7 @@ function App() {
           });
           clearedData = clearedData.map((item, idx) => {
             return {
-              date: idx > 0 ? date : "Date",
+              date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-MM-DD') : "Date",
               flight_number: item["__EMPTY_1"],
               aircraft_type: item["__EMPTY_2"],
               reg_number: item["__EMPTY_3"],
@@ -70,8 +73,18 @@ function App() {
     <div>
       <div>
         <CustomFileInput handleFileUpload={handleFileUpload} />
+        <div className={styles.selectAndUpload}>
+          <SelectInput onSelect={onSelect} disabled={!data?.length} />
 
-        <SelectInput onSelect={onSelect} disabled={!data?.length} />
+          <CustomButton title="Upload" handleClick={() => {
+            if (data.length) {
+              uploadFlightList(data.slice(1))
+            } else {
+              alert("No data available to upload")
+            }
+          }}/> 
+        </div>
+
       </div>
       <div className={styles.flightTableWrapper}>
         {Object.keys(membersData)?.length

@@ -17,7 +17,6 @@ const SingleMember = ({ data, headers, member }) => {
   }, [member]);
 
   const filteredData = data ? data.filter(Boolean) : null;
-  console.log("filtered data: ", filteredData);
   const validHeaders = typeof headers === "object" && headers !== null;
   const validData = filteredData && filteredData.length > 0;
 
