@@ -1,9 +1,9 @@
-/* FlightsTable.module.css */
 
 /* General styling for the table */
 .tableContainer {
   flex: 1;
 }
+
 .flightsTable {
   width: 100%;
   border-collapse: collapse;
@@ -31,21 +31,72 @@
   color: #555;
 }
 
-/* Add alternating row colors */
+/* Alternating row colors */
 .flightsTable tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/* Hover effect for rows */
+/* Hover effect */
 .flightsTable tr:hover {
   background-color: #ddd;
   cursor: pointer;
 }
 
-/* Style for table header on mobile */
+
+/* Controls container */
+.controlsContainer {
+  display: flex;
+  flex-direction: row; /* Align items horizontally */
+  gap: 25px; 
+  align-items: center; /* Vertically center items */
+  margin-bottom: 20px;
+  /* margin-right: 30px; */
+}
+
+/* Buttons */
+.controlButton {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  /* margin-left: 15px; */
+}
+.onlyNaj{
+  margin-left: 10px;
+}
+
+.controlButton:hover {
+  background-color: #45a049;
+
+}
+
+.activeButton {
+  background-color: #f44336;
+}
+
+.activeButton:hover {
+  background-color: #d32f2f;
+}
+
+/* Input */
+.controlInput {
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Responsive adjustments */
 @media screen and (max-width: 768px) {
-  .flightsTable th,
-  .flightsTable td {
-    padding: 8px 10px;
+  .controlsContainer {
+    flex-direction: column; /* Stack items on smaller screens */
+    align-items: flex-start;
+  }
+
+  .controlInput {
+    width: 100%;
   }
 }
