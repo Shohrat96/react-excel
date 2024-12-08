@@ -26,6 +26,7 @@ const FlightsTable = ({ data, headers, member }) => {
     XLSX.writeFile(wb, `${member}.xlsx`);
   }, [member]);
 
+
   // Memoized filtering logic
   const filteredData = useMemo(() => {
     if (!data) return null;
@@ -43,6 +44,8 @@ const FlightsTable = ({ data, headers, member }) => {
     });
   }, [data, searchTerm, showNAJOnly]);
 
+
+  const filteredData = data ? data.filter(Boolean) : n
   const validHeaders = typeof headers === "object" && headers !== null;
   const validData = filteredData && filteredData.length > 0;
 
