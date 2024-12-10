@@ -8,12 +8,31 @@ import { shareFlightsByMembers } from "./utils/shareFlightsByMembers";
 import SelectInput from "./components/CustomSelectElement";
 import CustomButton from "./components/CustomBtn";
 import uploadFlightList from "./api/uploadFlightList";
+import getFlightListWithTaf from "./api/getFlightListWithTaf";
+
+
+const FLIGHT_TABLE_HEADERS = {
+  date: "Date",
+  flight_number: "FLT NBR",
+  aircraft_type: "ACFT TYPE",
+  reg_number: "REGN",
+  origin: "DEP",
+  ETD: "ETD",
+  destination: "DES",
+  ETA: "ETA",
+  TAF_DEP: "TAF DEP",
+  TAF_DEST: "TAF DEST",
+  metar_dep: "METAR DEP",
+  metar_dest: "METAR DEST",
+}
 
 function App() {
   const [data, setData] = useState([]);
   const [members, setMembers] = useState(1);
+  const [ monitoringStarted, setMonitoringStarted] = useState(false)
 
   const handleFileUpload = (e) => {
+    setMonitoringStarted(false)
     const files = e.target.files;
     const filePromises = Array.from(files).map((file, idx) => {
       return new Promise((resolve, reject) => {
@@ -35,14 +54,14 @@ function App() {
           });
           clearedData = clearedData.map((item, idx) => {
             return {
-              date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-MM-DD') : "Date",
+              date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-DD-MM') : "Date",
               flight_number: item["__EMPTY_1"],
               aircraft_type: item["__EMPTY_2"],
               reg_number: item["__EMPTY_3"],
-              departure: item["__EMPTY_4"],
-              etd: item["__EMPTY_6"],
+              origin: item["__EMPTY_4"],
+              ETD: item["__EMPTY_6"],
               destination: item["__EMPTY_7"],
-              eta: item["__EMPTY_8"],
+              ETA: item["__EMPTY_8"],
             };
           });
 
@@ -54,13 +73,13 @@ function App() {
     });
 
     Promise.all(filePromises).then((allData) => {
-      setData(allData.flat());
+      setData(allData.flat().slice(1));
     });
   };
 
   const membersData = useMemo(() => {
     if (data?.length > 0) {
-      return shareFlightsByMembers(data.slice(1), members);
+      return shareFlightsByMembers(data, members);
     }
     return {};
   }, [members, data]);
@@ -69,6 +88,30 @@ function App() {
     setMembers(v.target.value);
   };
 
+  
+  const handleUploadFlights = async () => {
+    if (data.length) {
+      try {
+        if (!monitoringStarted) {
+          const res = await uploadFlightList(data)
+        }
+        const getFlights = await getFlightListWithTaf()
+        if (getFlights?.status === 200) {
+          setData(getFlights?.data)
+          setMonitoringStarted(true)
+        } else {
+          setMonitoringStarted(false)
+          throw new Error("Error in fetching flight data");
+        }
+        
+      } catch (error) {
+        console.log("error in uploading flights list");
+        
+      }
+    } else {
+      alert("No data available to upload")
+    }
+  }
   return (
     <div>
       <div>
@@ -76,13 +119,7 @@ function App() {
         <div className={styles.selectAndUpload}>
           <SelectInput onSelect={onSelect} disabled={!data?.length} />
 
-          <CustomButton title="Upload" handleClick={() => {
-            if (data.length) {
-              uploadFlightList(data.slice(1))
-            } else {
-              alert("No data available to upload")
-            }
-          }}/> 
+          <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights}/> 
         </div>
 
       </div>
@@ -91,7 +128,7 @@ function App() {
           ? Object.keys(membersData).map((singleMember) => (
               <SingleMember
                 key={singleMember}
-                headers={data[0]}
+                headers={FLIGHT_TABLE_HEADERS}
                 member={singleMember}
                 data={membersData[singleMember]}
               />

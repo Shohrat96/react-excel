@@ -45,7 +45,7 @@ const FlightsTable = ({ data, headers, member }) => {
   }, [data, searchTerm, showNAJOnly]);
 
 
-  const filteredData = data ? data.filter(Boolean) : n
+  const cleanedData = filteredData.filter(Boolean)
   const validHeaders = typeof headers === "object" && headers !== null;
   const validData = filteredData && filteredData.length > 0;
 
@@ -84,10 +84,10 @@ const FlightsTable = ({ data, headers, member }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row, index) => (
+            {cleanedData.map((row, index) => (
               <tr key={index}>
-                {Object.values(row).map((value, idx) => (
-                  <td key={idx}>{value}</td>
+                {Object.keys(headers).map((value, idx) => (
+                  <td key={value}>{row[value]}</td>
                 ))}
               </tr>
             ))}
