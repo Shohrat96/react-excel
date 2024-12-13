@@ -9,6 +9,7 @@ import SelectInput from "./components/CustomSelectElement";
 import CustomButton from "./components/CustomBtn";
 import uploadFlightList from "./api/uploadFlightList";
 import getFlightListWithTaf from "./api/getFlightListWithTaf";
+import useWebSocket from "./webSocket";
 
 
 const FLIGHT_TABLE_HEADERS = {
@@ -28,8 +29,12 @@ const FLIGHT_TABLE_HEADERS = {
 
 function App() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [members, setMembers] = useState(1);
   const [ monitoringStarted, setMonitoringStarted] = useState(false)
+  const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
+
+  const { isLoading, lastUpdatedWeatherFromSocket } = useWebSocket(setData, monitoringStarted)
 
   const handleFileUpload = (e) => {
     setMonitoringStarted(false)
@@ -92,8 +97,12 @@ function App() {
   const handleUploadFlights = async () => {
     if (data.length) {
       try {
+        setLoading(true)
         if (!monitoringStarted) {
           const res = await uploadFlightList(data)
+          if (res.status === 200) {
+            setLastUpdatedWeather(dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]'))
+          }          
         }
         const getFlights = await getFlightListWithTaf()
         if (getFlights?.status === 200) {
@@ -107,6 +116,8 @@ function App() {
       } catch (error) {
         console.log("error in uploading flights list");
         
+      } finally {
+        setLoading(false)
       }
     } else {
       alert("No data available to upload")
@@ -114,14 +125,19 @@ function App() {
   }
   return (
     <div>
-      <div>
-        <CustomFileInput handleFileUpload={handleFileUpload} />
-        <div className={styles.selectAndUpload}>
-          <SelectInput onSelect={onSelect} disabled={!data?.length} />
+      <div className={styles.header}>
+        <div className={styles.controlsWrapper}>
+          <CustomFileInput handleFileUpload={handleFileUpload} />
+          <div className={styles.selectAndUpload}>
+            <SelectInput onSelect={onSelect} disabled={!data?.length} />
 
-          <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights}/> 
+            <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights}/> 
+          </div>
         </div>
 
+      <div className={styles.timeStamp}>
+        <span>Last update: {lastUpdatedWeatherFromSocket || lastUpdatedWeather || "Not Started"}</span>
+      </div>
       </div>
       <div className={styles.flightTableWrapper}>
         {Object.keys(membersData)?.length
@@ -135,6 +151,12 @@ function App() {
             ))
           : null}
       </div>
+      {
+        (loading || isLoading) && (
+          <div className={styles.spinner}></div>
+        )
+      }
+      
     </div>
   );
 }

@@ -11,6 +11,7 @@ const uploadFlightList = async (flights) => {
             throw new Error("error in post >/flights/upload ");
             
         }
+        return res
     } catch (error) {
         console.log("Error in upload: ", error)
     }
