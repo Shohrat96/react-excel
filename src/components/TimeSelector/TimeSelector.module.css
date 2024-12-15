@@ -1,0 +1,56 @@
+/* Main container for the time selector */
+.timeSelector {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Dropdown wrapper styling */
+  .dropdownWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: auto;
+    margin-right: 16px;
+  }
+  
+  /* Label for the dropdown */
+  .label {
+    font-size: 12px;
+    color: #bdc3c7;
+  }
+  
+  /* Styling for the dropdown */
+  .dropdown {
+    background-color: #34495e; /* Slightly lighter than main background */
+    color: #ecf0f1;
+    border: 1px solid #7f8c8d;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  /* Time display container */
+  .timeDisplay {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  
+  /* Label for the current time */
+  .timeLabel {
+    font-size: 14px;
+    color: #bdc3c7;
+  }
+  
+  /* Current time value styling */
+  .timeValue {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+  }
+  
