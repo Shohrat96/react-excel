@@ -100,3 +100,11 @@
     width: 100%;
   }
 }
+
+.warningRow td {
+  background-color: #ffe5e5; /* Light red background */
+}
+
+.onlyAlerts {
+  margin-left: auto;
+}

@@ -14,7 +14,7 @@ const Sidebar = ({collapsed, setCollapsed}) => {
   return (
     <div className={`${styles.sidebar} ${collapsed ? styles.collapsed : ""}`}>
       <div className={styles.sidebarHeader}>
-        {!collapsed && <h2 className={styles.title}>Flight Dispatch</h2>}
+        {!collapsed && <h2 className={styles.title}>AZAL - Flight Dispatch</h2>}
         <button className={styles.toggleBtn} onClick={toggleSidebar}>
         { collapsed ?  <GoSidebarCollapse/> : <GoSidebarExpand/>}
         </button>

@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
 
 const handleFileUpload = (e, cb) => {
     const files = e.target.files;
@@ -13,7 +16,7 @@ const handleFileUpload = (e, cb) => {
           const sheet = workbook.Sheets[sheetName];
           const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-          const date = parsedData[1]["__EMPTY_1"].split(" ")[1];
+          const date = parsedData[1]["__EMPTY_1"].split(" ")[1];          
 
           let clearedData = parsedData.filter((item) => {
             return (
@@ -23,7 +26,7 @@ const handleFileUpload = (e, cb) => {
           });
           clearedData = clearedData.map((item, idx) => {
             return {
-              date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-DD-MM') : "Date",
+              date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-MM-DD') : "Date",
               flight_number: item["__EMPTY_1"],
               aircraft_type: item["__EMPTY_2"],
               reg_number: item["__EMPTY_3"],

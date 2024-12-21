@@ -5,7 +5,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 const TimeSelector = () => {
-  const [timeFormat, setTimeFormat] = useState("LOCAL"); // Default to LOCAL
+  const [timeFormat, setTimeFormat] = useState("UTC"); // Default to LOCAL
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

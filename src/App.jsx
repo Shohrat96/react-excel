@@ -25,7 +25,7 @@ function App() {
   const [members, setMembers] = useState(1);
   const [monitoringStarted, setMonitoringStarted] = useState(false)
   const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
-  const [ collapsed, setCollapsed ] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   const { isLoading, lastUpdatedWeatherFromSocket } = useWebSocket(setData, monitoringStarted)
 
@@ -38,6 +38,8 @@ function App() {
     return {};
   }, [members, data]);
 
+  console.log("membersData : ", membersData);
+  
   const onSelect = (v) => {
     setMembers(v.target.value);
   };
@@ -95,6 +97,10 @@ function App() {
           <div className={styles.timeStamp}>
             <span>Last update: {lastUpdatedWeatherFromSocket || lastUpdatedWeather || "Not Started"}</span>
           </div>
+
+          <div className={styles.onlyWithWarning}>
+
+          </div>
         </div>
         <div className={styles.flightTableWrapper}>
           {Object.keys(membersData)?.length
@@ -108,12 +114,14 @@ function App() {
             ))
             : null}
         </div>
+
+        {
+          (loading || isLoading) && (
+            <div className={styles.spinner}></div>
+          )
+        }
       </div>
-      {
-        (loading || isLoading) && (
-          <div className={styles.spinner}></div>
-        )
-      }
+
       <ScrollToTop />
     </div>
   );

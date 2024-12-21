@@ -2,16 +2,25 @@ import React, { useState, useCallback, useMemo, useRef } from "react";
 import * as XLSX from "xlsx";
 import styles from "./SingleMember.module.css";
 import CustomButton from "../CustomBtn";
+import { FLIGHT_TABLE_HEADERS } from "../../types/constants";
+import { formatTAFData } from "../../utils/formatTAFdata";
+import CustomSliderComponent from "../CustomSlider";
+
 
 const FlightsTable = ({ data, headers, member }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showNAJOnly, setShowNAJOnly] = useState(false);
+  const [showWarningsOnly, setShowWarningsOnly] = useState(false);
 
   const tableRef = useRef();
 
   // Function to handle search term update
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const toggleWarningsFilter = () => {
+    setShowWarningsOnly((prev) => !prev);
   };
 
   // Function to toggle the NAJ filter
@@ -35,6 +44,9 @@ const FlightsTable = ({ data, headers, member }) => {
         String(value).trim().toUpperCase() === "NAJ"
       );
       if (showNAJOnly && !hasNAJ) return false;
+
+      if (showWarningsOnly && !row.isWarning) return false;
+
       if (searchTerm) {
         return Object.values(row).some(value =>
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -42,7 +54,7 @@ const FlightsTable = ({ data, headers, member }) => {
       }
       return true;
     });
-  }, [data, searchTerm, showNAJOnly]);
+  }, [data, searchTerm, showNAJOnly, showWarningsOnly]);
 
 
   const cleanedData = filteredData.filter(Boolean)
@@ -71,6 +83,9 @@ const FlightsTable = ({ data, headers, member }) => {
           <CustomButton title={showNAJOnly ? "Show All" : "Only NAJ"} handleClick={toggleNAJFilter} />
             
         </div>
+        <div className={styles.onlyAlerts}>
+          <CustomSliderComponent active={showWarningsOnly} toggleActive={toggleWarningsFilter} activeTitle="Only Alerts" deactiveTitle="All Flights" />
+        </div>
       </div>
 
       {/* Render the table */}
@@ -85,10 +100,20 @@ const FlightsTable = ({ data, headers, member }) => {
           </thead>
           <tbody>
             {cleanedData.map((row, index) => (
-              <tr key={index}>
-                {Object.keys(headers).map((value, idx) => (
-                  <td key={value}>{row[value]}</td>
-                ))}
+              <tr key={index} className={row.isWarning ? styles.warningRow : ""}>
+                {Object.keys(headers).map((value, idx) => {
+                  
+                  if (headers[value] === FLIGHT_TABLE_HEADERS.TAF_DEP || headers[value] === FLIGHT_TABLE_HEADERS.TAF_DEST) {
+                    
+                    return (
+                      <td key={value}>{formatTAFData(row[value])}</td>
+                    )
+                  }
+
+                  return (
+                    <td key={value}>{row[value]}</td>
+                  )
+                })}
               </tr>
             ))}
           </tbody>

@@ -7,6 +7,8 @@
 .main {
   margin-left: 250px;
   transition: margin-left 0.3s ease;
+  position: relative;
+  min-height: 100vh;
 }
 .collapsed {
   margin-left: 60px;
@@ -38,8 +40,8 @@
   box-sizing: border-box;
   content: '';
   display: block;
-  position: fixed;
-  top: 50%;
+  position: absolute;
+  top: 50vh;
   left: 50%;
   margin-top: -5em;
   margin-left: -5em;
