@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
-const useWebSocket = (updateFlightsUI, monitoringStarted) => {
+const useWebSocket = (updateFlightsUI, monitoringStarted, setLastUpdatedWeather) => {
   const [isLoading, setIsLoading] = useState(false); // Initialize as loading
-  const [lastUpdatedWeatherFromSocket, setLastUpdatedWeatherFromSocket] = useState(null); // State to store the timestamp
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -22,9 +21,8 @@ const useWebSocket = (updateFlightsUI, monitoringStarted) => {
       ws.onmessage = (event) => {
         try {
           const updatedFlights = JSON.parse(event.data);
-          console.log('Received updated flights:', updatedFlights);
           updateFlightsUI(updatedFlights);  // Update the state with new data
-          setLastUpdatedWeatherFromSocket(dayjs().format('YYYY-MM-DD HH:mm:ss')); // Update timestamp after successful data fetch
+          setLastUpdatedWeather(dayjs().utc().format("YYYY-MM-DD HH:mm:ss")); // Update timestamp after successful data fetch
           setError(null); // Clear any previous errors
           setIsLoading(false)
 
@@ -47,7 +45,7 @@ const useWebSocket = (updateFlightsUI, monitoringStarted) => {
       }
     };
   }, [updateFlightsUI, monitoringStarted]); // The effect depends on `updateFlightsUI` and monitoringStarted
-  return { isLoading, lastUpdatedWeatherFromSocket }
+  return { isLoading }
 };
 
 export default useWebSocket;

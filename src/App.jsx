@@ -15,6 +15,7 @@ import Sidebar from "./components/Sidebar";
 import TimeSelector from "./components/TimeSelector";
 import HeaderControls from "./components/HeaderControls";
 import ScrollToTop from "./components/ScrollTopComponent";
+import JeppesenDataPage from "./pages/jepessen";
 
 
 
@@ -24,12 +25,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [members, setMembers] = useState(1);
   const [monitoringStarted, setMonitoringStarted] = useState(false)
-  const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
   const [collapsed, setCollapsed] = useState(false)
+  const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
 
-  const { isLoading, lastUpdatedWeatherFromSocket } = useWebSocket(setData, monitoringStarted)
+  const { isLoading } = useWebSocket(setData, monitoringStarted, setLastUpdatedWeather)
 
-
+  const pathname = window.location.pathname;
 
   const membersData = useMemo(() => {
     if (data?.length > 0) {
@@ -38,8 +39,6 @@ function App() {
     return {};
   }, [members, data]);
 
-  console.log("membersData : ", membersData);
-  
   const onSelect = (v) => {
     setMembers(v.target.value);
   };
@@ -51,14 +50,12 @@ function App() {
         setLoading(true)
         if (!monitoringStarted) {
           const res = await uploadFlightList(data)
-          if (res.status === 200) {
-            setLastUpdatedWeather(dayjs().format('YYYY-MM-DDTHH:mm:ssZ[Z]'))
-          }
         }
         const getFlights = await getFlightListWithTaf()
         if (getFlights?.status === 200) {
           setData(getFlights?.data)
           setMonitoringStarted(true)
+          setLastUpdatedWeather(dayjs().utc().format("YYYY-MM-DD HH:mm:ss"))
         } else {
           setMonitoringStarted(false)
           throw new Error("Error in fetching flight data");
@@ -74,13 +71,19 @@ function App() {
       alert("No data available to upload")
     }
   }
+
+
+  if (pathname.startsWith('/jeppesen/')) {
+    // Render the Jeppesen data page based on the current URL
+    return <JeppesenDataPage />;
+  }
+
   return (
     <div className={styles.container}>
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
       <div className={`${styles.main} ${collapsed ? styles.collapsed : ""}`}>
         <HeaderControls />
-
         <div className={styles.header}>
           <div className={styles.controlsWrapper}>
             <CustomFileInput handleFileUpload={(e) => {
@@ -95,7 +98,7 @@ function App() {
           </div>
 
           <div className={styles.timeStamp}>
-            <span>Last update: {lastUpdatedWeatherFromSocket || lastUpdatedWeather || "Not Started"}</span>
+            <span>Last update: {lastUpdatedWeather ? `${lastUpdatedWeather} UTC` : "Not Started"}</span>
           </div>
 
           <div className={styles.onlyWithWarning}>

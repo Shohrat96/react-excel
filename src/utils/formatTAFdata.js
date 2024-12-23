@@ -5,10 +5,10 @@ export function formatTAFData(rawTAF) {
 
   // Split the raw TAF string into lines based on `TEMPO` and `BECMG` keywords
   return rawTAF
-    .replace(/(TEMPO|BECMG)/g, "\n$1") // Add a newline before TEMPO and BECMG
+    .replace(/(TEMPO|FM|BECMG)/g, "\n$1") // Add a newline before TEMPO and BECMG
     .split("\n") // Split the string into lines
     .map((line, index) => {
-      if (line.startsWith("TEMPO") || line.startsWith("BECMG")) {
+      if (line.startsWith("TEMPO") || line.startsWith("BECMG") || line.startsWith("FM")) {
         // Bold the TEMPO or BECMG parts
         const [keyword, ...rest] = line.split(" ");
         return (

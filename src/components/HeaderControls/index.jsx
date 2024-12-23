@@ -5,8 +5,6 @@ import styles from './HeaderControls.module.css'
 export default () => {
 
     const headerRef = useRef(null);
-    const [isHidden, setIsHidden] = useState(false);
-    const [isAtBottom, setIsAtBottom] = useState(false);
 
     const [isVisible, setIsVisible] = useState(true); // Tracks visibility of the header
     const lastScrollY = useRef(0); // Stores the last scroll position

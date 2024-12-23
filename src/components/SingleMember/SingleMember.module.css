@@ -39,7 +39,7 @@
 /* Hover effect */
 .flightsTable tr:hover {
   background-color: #ddd;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 
