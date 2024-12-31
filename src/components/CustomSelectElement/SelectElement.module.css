@@ -1,18 +1,17 @@
 /* Container for the select dropdown */
 .selectContainer {
   position: relative;
-  width: 200px;
-  margin-block: 20px; /* Center horizontally */
+  /* Center horizontally */
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
 /* Style for the select element */
 .selectElement {
   width: 100%;
   padding: 12px;
-  font-size: 16px;
   font-weight: bold;
   background-color: #f1f1f1;
   border: 2px solid #ddd;
@@ -20,9 +19,12 @@
   color: #555;
   cursor: pointer;
   transition: border 0.3s ease, background-color 0.3s ease;
-  -webkit-appearance: none; /* Remove default appearance in webkit browsers */
-  -moz-appearance: none; /* Remove default appearance in Firefox */
-  appearance: none; /* Remove default appearance */
+  -webkit-appearance: none;
+  /* Remove default appearance in webkit browsers */
+  -moz-appearance: none;
+  /* Remove default appearance in Firefox */
+  appearance: none;
+  /* Remove default appearance */
 }
 
 /* Add a custom arrow using a pseudo element */

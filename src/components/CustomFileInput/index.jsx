@@ -20,7 +20,7 @@ const FileInput = ({ handleFileUpload }) => {
       </label>
 
       {/* Optional label text for file selection */}
-      <span className={styles.fileInputLabel}>Accepts .xlsx, .xls formats</span>
+      {/* <span className={styles.fileInputLabel}>Accepts .xlsx, .xls formats</span> */}
     </div>
   );
 };

@@ -9,12 +9,14 @@
   position: fixed;
   top: 0;
   left: 0;
-  transition: all 0.3s ease; /* Smooth animation */
+  transition: all 0.3s ease;
+  /* Smooth animation */
   overflow: hidden;
 }
 
 .collapsed {
-  width: 60px; /* Collapsed width */
+  width: 60px;
+  /* Collapsed width */
 }
 
 /* Sidebar header */
@@ -50,6 +52,11 @@
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+.menu a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .menuItem {

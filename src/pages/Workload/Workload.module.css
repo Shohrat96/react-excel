@@ -1,0 +1,98 @@
+.container {
+    padding: 16px;
+}
+
+.fileInputMemberWrapper {
+    display: flex;
+    gap: 16px;
+    max-width: 350px;
+    margin-bottom: 16px;
+}
+
+.collapsed {
+    margin-left: 60px;
+}
+
+.flightTableWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.selectAndUpload {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: baseline;
+    padding: 16px;
+}
+
+.control {
+    margin-bottom: 16px;
+    max-width: 350px;
+    display: flex;
+}
+
+.controlsWrapper {}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: flex;
+}
+
+/* Button styling */
+.dropdownBtn {
+    background-color: transparent;
+    border: none;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #2c3e50;
+    outline: none;
+}
+
+/* Dropdown menu */
+.dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 8px 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Dropdown item */
+.dropdownItem {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #2c3e50;
+}
+
+.dropdownItem input {
+    margin-right: 8px;
+}
+
+/* Dropdown item hover effect */
+.dropdownItem:hover {
+    background-color: #f0f0f0;
+}
+
+/* Input */
+.controlInput {
+    padding: 10px;
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}

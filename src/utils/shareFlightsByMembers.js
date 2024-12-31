@@ -1,4 +1,5 @@
 export const shareFlightsByMembers = (flights, memberCount) => {
+
   if (flights.length === 0) return {};
   const res = {};
   // res = { member1: [], member2: [] }
