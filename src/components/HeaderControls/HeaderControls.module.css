@@ -1,23 +1,25 @@
 .headerControls {
-    position: sticky;
-    top: 0;
-    height: 56px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background-color: #fff;
-    box-shadow: 0 10px 10px -9px rgba(0, 0, 0, 0.16);
-    z-index: 1000;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  }
-  
-  .headerControls.hidden {
-    transform: translateY(-100%);
-    opacity: 0; /* Smooth fade-out */
-  }
-  
-  .headerControls.visible {
-    transform: translateY(0);
-    opacity: 1; /* Smooth fade-in */
-  }
-  
+  position: sticky;
+  padding-inline: 16px;
+  top: 0;
+  height: 56px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 10px 10px -9px rgba(0, 0, 0, 0.16);
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.headerControls.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  /* Smooth fade-out */
+}
+
+.headerControls.visible {
+  transform: translateY(0);
+  opacity: 1;
+  /* Smooth fade-in */
+}

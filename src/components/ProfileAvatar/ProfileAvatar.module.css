@@ -1,0 +1,38 @@
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    top: 36px;
+    /* Adjust based on icon size */
+    right: 0;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown li {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #2c3e50;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown li:hover {
+    background-color: #f0f0f0;
+}

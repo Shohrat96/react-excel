@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
+import { excelDateToJSDate } from "./convertExcelDateIntoReactDate";
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
 
@@ -20,20 +21,21 @@ const handleFileUpload = (e, cb) => {
 
         let clearedData = parsedData.filter((item) => {
           return (
-            Object.keys(item).length >= 7 &&
-            !item["__EMPTY_3"].includes("LY-")
+            Object.keys(item).length >= 8 &&
+            !item["__EMPTY_4"].includes("LY-")
           );
         });
         clearedData = clearedData.map((item, idx) => {
+
           return {
-            date: idx > 0 ? dayjs(date, 'DD.MM.YYYY').format('YYYY-MM-DD') : "Date",
-            flight_number: item["__EMPTY_1"],
-            aircraft_type: item["__EMPTY_2"],
-            reg_number: item["__EMPTY_3"],
-            origin: item["__EMPTY_4"],
-            ETD: item["__EMPTY_6"],
-            destination: item["__EMPTY_7"],
-            ETA: item["__EMPTY_8"],
+            date: idx > 0 ? excelDateToJSDate(item["__EMPTY_1"]) : "Date",
+            flight_number: item["__EMPTY_2"],
+            aircraft_type: item["__EMPTY_3"],
+            reg_number: item["__EMPTY_4"],
+            origin: item["__EMPTY_6"],
+            ETD: item["__EMPTY_7"],
+            destination: item["__EMPTY_8"],
+            ETA: item["__EMPTY_9"],
           };
         });
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import SelectInput from "../../components/CustomSelectElement"
 import SingleMember from "../../components/SingleMember";
 import { WORKLOAD_TABLE_HEADERS } from "../../types/constants";
@@ -15,8 +15,15 @@ const WorkloadPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const [selectedDestinations, setSelectedDestinations] = useState([]);
+    const [destinations, setDestinations] = useState([]);
+    // const destinations = [...new Set(data.map(flight => flight.destination))]; // Extract unique destinations from data
 
-    const destinations = [...new Set(data.map(flight => flight.destination))]; // Extract unique destinations from data
+
+    useEffect(() => {
+        // Update destinations whenever `data` changes
+        const uniqueDestinations = [...new Set(data.map(flight => flight.destination))];
+        setDestinations(uniqueDestinations);
+    }, [data]);
 
     const onSelect = (v) => {
         setMembers(v.target.value);
@@ -31,12 +38,6 @@ const WorkloadPage = () => {
     const filteredData = useMemo(() => {
         if (!data) return null;
         return data.filter(Boolean).filter(row => {
-            // const hasNAJ = Object.values(row).some(value =>
-            //     String(value).trim().toUpperCase() === "NAJ"
-            // );
-            // if (showNAJOnly && !hasNAJ) return false;
-
-            // if (showWarningsOnly && !row.isWarning) return false;
 
             if (searchTerm) {
                 return Object.values(row).some(value => {
@@ -63,19 +64,30 @@ const WorkloadPage = () => {
     }, [members, filteredData]);
 
 
+    const sortedDestinations = destinations.sort((a, b) => {
+        const aIndex = selectedDestinations.indexOf(a);
+        const bIndex = selectedDestinations.indexOf(b);
+
+        if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex - bIndex;
+        } else if (aIndex !== -1) {
+            return -1;
+        } else if (bIndex !== -1) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+
     const handleCheckboxChange = (e) => {
-        console.log("e : ", e.target);
         setSelectedDestinations((prev) => {
             if (prev.includes(e.target.value)) {
                 return prev.filter((dest) => dest !== e.target.value);
             }
             return [...prev, e.target.value];
         })
-        // const options = Array.from(e.target.selectedOptions).map((option) => option.value);
-        // console.log("options ", options);
-
-        // setSelectedDestinations(options);
     }
+
     return (
         <div className={styles.container}>
             <div className={styles.fileInputMemberWrapper}>
@@ -95,29 +107,7 @@ const WorkloadPage = () => {
                             className={styles.controlInput}
                         />
 
-                        <Dropdown destinations={destinations} selectedDestinations={selectedDestinations} handleCheckboxChange={handleCheckboxChange} />
-
-                        {/* <div className={styles.dropdown}>
-                            <button className={styles.dropdownBtn} onClick={toggleDropdown}>
-                                Dest ▼
-                            </button>
-                            {isDropdownVisible && (
-                                <div className={styles.dropdownMenu}>
-                                    {destinations.map((dest) => (
-                                        <div key={dest} className={styles.dropdownItem}>
-                                            <input
-                                                checked={selectedDestinations.includes(dest)}
-                                                type="checkbox"
-                                                id={`dest-${dest}`}
-                                                value={dest}
-                                                onChange={(e) => handleCheckboxChange(e)}
-                                            />
-                                            <label htmlFor={`dest-${dest}`}>{dest}</label>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div> */}
+                        <Dropdown destinations={sortedDestinations} selectedDestinations={selectedDestinations} handleCheckboxChange={handleCheckboxChange} />
                     </div>
                 ) : null
             }

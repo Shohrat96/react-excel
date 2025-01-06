@@ -5,16 +5,23 @@
   "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "dayjs-plugin-utc": "^0.1.2",
+    "formik": "^2.4.6",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^5.4.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.0",
     "react-scripts": "^5.0.1",
+    "react-toastify": "^11.0.2",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^3.1.0",
     "vite": "^6.0.3",
-    "xlsx": "0.18.5"
+    "xlsx": "0.18.5",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@types/react": "18.2.38",

@@ -1,0 +1,10 @@
+.main {
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+    position: relative;
+    min-height: 100vh;
+}
+
+.collapsed {
+    margin-left: 60px;
+}

@@ -5,6 +5,7 @@
 .fileInputMemberWrapper {
     display: flex;
     gap: 16px;
+    align-items: center;
     max-width: 350px;
     margin-bottom: 16px;
 }

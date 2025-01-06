@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import dayjs from 'dayjs';
 import { shareFlightsByMembers } from "../../utils/shareFlightsByMembers";
 import CustomButton from "../../components/CustomBtn";
@@ -11,35 +11,52 @@ import CustomFileInput from "../../components/CustomFileInput";
 import SingleMember from "../../components/SingleMember";
 import styles from "./Monitoring.module.css";
 import CustomSliderComponent from "../../components/CustomSlider";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly } from "../../redux/slice/flightsSlice";
+import restartWebsocket from "../../api/restartWebSocket";
 
 
 function MonitoringPage() {
-    const [data, setData] = useState([]);
+    const dispatch = useDispatch()
+    const { flightList, lastUpdate, monitoringStarted, showAlertsOnly } = useSelector(selectFlights)
+
     const [loading, setLoading] = useState(false);
     const [members, setMembers] = useState(1);
-    const [monitoringStarted, setMonitoringStarted] = useState(false)
-    const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
+    // const [monitoringStarted, setMonitoringStarted] = useState(false)
+    // const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
     const [showWarningsOnly, setShowWarningsOnly] = useState(false);
 
-    const { isLoading } = useWebSocket(setData, monitoringStarted, setLastUpdatedWeather)
+    const updateFlightsUI = useCallback((data) => {
+        dispatch(setFlightList(data))
+    }, [])
+    const setLastUpdatedWeather = useCallback((data) => {
+        dispatch(setLastUpdate(data))
+    }, [])
+    const setMonitoringStarted = useCallback((started) => {
+        dispatch(toggleMonitoring(started))
+    }, [])
+
+    const { isLoading } = useWebSocket(updateFlightsUI, monitoringStarted, setLastUpdatedWeather)
 
     const membersData = useMemo(() => {
-        if (data?.length > 0) {
-            return shareFlightsByMembers(data, members);
+        if (flightList?.length > 0) {
+            return shareFlightsByMembers(flightList, members);
         }
         return {};
-    }, [members, data]);
+    }, [members, flightList]);
 
     const handleUploadFlights = async () => {
-        if (data.length) {
+        if (flightList.length) {
             try {
                 setLoading(true)
                 if (!monitoringStarted) {
-                    const res = await uploadFlightList(data)
+                    const res = await uploadFlightList(flightList)
                 }
                 const getFlights = await getFlightListWithTaf()
+                const restartSocket = await restartWebsocket()
+
                 if (getFlights?.status === 200) {
-                    setData(getFlights?.data)
+                    dispatch(setFlightList((getFlights?.data)))
                     setMonitoringStarted(true)
                     setLastUpdatedWeather(dayjs().utc().format("YYYY-MM-DD HH:mm:ss"))
                 } else {
@@ -48,7 +65,7 @@ function MonitoringPage() {
                 }
 
             } catch (error) {
-                console.log("error in uploading flights list");
+                console.log("error in uploading flightList list");
 
             } finally {
                 setLoading(false)
@@ -60,17 +77,17 @@ function MonitoringPage() {
 
 
     const toggleWarningsFilter = () => {
-        setShowWarningsOnly((prev) => !prev);
+        dispatch(toggleShowAlertsOnly(!showAlertsOnly));
     };
 
     const flightsTableData = useCallback((data) => {
 
         return data.filter((item) => {
-            if (showWarningsOnly && !item?.isWarning) return false
+            if (showAlertsOnly && !item?.isWarning) return false
             return true
         })
 
-    }, [showWarningsOnly])
+    }, [showAlertsOnly])
 
 
     return (
@@ -79,7 +96,7 @@ function MonitoringPage() {
                 <div className={styles.controlsWrapper}>
                     <CustomFileInput handleFileUpload={(e) => {
                         setMonitoringStarted(false)
-                        handleFileUpload(e, setData)
+                        handleFileUpload(e, data => dispatch(setFlightList(data)))
                     }} />
                     <div className={styles.selectAndUpload}>
                         <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights} />
@@ -87,11 +104,11 @@ function MonitoringPage() {
                 </div>
 
                 <div className={styles.timeStamp}>
-                    <span>Last update: {lastUpdatedWeather ? `${lastUpdatedWeather} UTC` : "Not Started"}</span>
+                    <span>Last update: {lastUpdate ? `${lastUpdate} UTC` : "Not Started"}</span>
                 </div>
 
                 <div className={styles.onlyAlerts}>
-                    <CustomSliderComponent active={showWarningsOnly} toggleActive={toggleWarningsFilter} title="Alerts only" />
+                    <CustomSliderComponent active={showAlertsOnly} toggleActive={toggleWarningsFilter} title="Alerts only" />
                 </div>
             </div>
             <div className={styles.flightTableWrapper}>
