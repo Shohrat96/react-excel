@@ -5,6 +5,7 @@ const initialState = {
     monitoringStarted: false,
     lastUpdate: '',
     showAlertsOnly: false,
+    remarks: [],
 };
 
 const flightsSlice = createSlice({
@@ -27,6 +28,10 @@ const flightsSlice = createSlice({
         toggleShowAlertsOnly: (state, action) => {
             state.showAlertsOnly = action.payload;
         },
+        setRemarks(state, action) {
+            const { flightId, remark } = action.payload;
+            state.remarks[flightId] = remark;
+        },
     },
 });
 
@@ -36,6 +41,7 @@ export const {
     toggleMonitoring,
     setLastUpdate,
     toggleShowAlertsOnly,
+    setRemarks,
 } = flightsSlice.actions;
 
 

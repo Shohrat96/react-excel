@@ -1,0 +1,82 @@
+/* Modal overlay styling */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    /* Darker background for better contrast */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    /* Smooth fade-in/fade-out effect */
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Modal content styling */
+.modalContent {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    /* Rounded corners for a softer look */
+    max-width: 600px;
+    /* Slightly wider */
+    width: 100%;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    animation: slideUp 0.3s ease-out;
+    /* Slide-in animation */
+}
+
+/* Close button styling */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    /* Larger button for better interaction */
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.closeButton:hover {
+    color: #d9534f;
+    /* Red color on hover */
+    transform: rotate(90deg);
+    /* Rotate button for fun effect */
+}
+
+/* Modal animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .modalContent {
+        padding: 20px;
+        max-width: 90%;
+        /* Ensure it doesn’t overflow */
+    }
+
+    .closeButton {
+        font-size: 1.5rem;
+        /* Smaller close button for mobile */
+    }
+}

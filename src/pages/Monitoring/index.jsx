@@ -14,6 +14,7 @@ import CustomSliderComponent from "../../components/CustomSlider";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly } from "../../redux/slice/flightsSlice";
 import restartWebsocket from "../../api/restartWebSocket";
+import RemarksForm from "../../components/RemarksForm";
 
 
 function MonitoringPage() {
@@ -25,6 +26,8 @@ function MonitoringPage() {
     // const [monitoringStarted, setMonitoringStarted] = useState(false)
     // const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
     const [showWarningsOnly, setShowWarningsOnly] = useState(false);
+    const [showRemarksModal, setShowRemarksModal] = useState(false);
+
 
     const updateFlightsUI = useCallback((data) => {
         dispatch(setFlightList(data))
@@ -109,8 +112,21 @@ function MonitoringPage() {
 
                 <div className={styles.onlyAlerts}>
                     <CustomSliderComponent active={showAlertsOnly} toggleActive={toggleWarningsFilter} title="Alerts only" />
+                    <div className={styles.controlsWrapper}>
+                        {/* Add Remarks Button */}
+                        <CustomButton
+                            title="CheckList"
+                            handleClick={() => setShowRemarksModal(true)}
+                        />
+                    </div>
+
+                    {showRemarksModal && (
+                        <RemarksForm closeModal={() => setShowRemarksModal(false)} />
+                    )}
                 </div>
+
             </div>
+
             <div className={styles.flightTableWrapper}>
                 {Object.keys(membersData)?.length
                     ? Object.keys(membersData).map((singleMember) => (
@@ -122,13 +138,16 @@ function MonitoringPage() {
                         />
                     ))
                     : null}
+
             </div>
+
 
             {
                 (loading || isLoading) && (
                     <div className={styles.spinner}></div>
                 )
             }
+
         </>
     );
 }
