@@ -44,7 +44,9 @@ export const login = (credentials) => async (dispatch) => {
 
         dispatch(loginSuccess({ email: data.email, token: data.token }));
     } catch (error) {
-        dispatch(loginFailure(error));
+        console.log('Error in login:', error);
+        
+        dispatch(loginFailure(error?.message));
     }
 };
 

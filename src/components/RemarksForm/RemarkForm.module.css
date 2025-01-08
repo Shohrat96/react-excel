@@ -153,3 +153,11 @@
     margin: 0;
     font-size: 14px;
 }
+
+.section {
+    padding: 8px;
+}
+
+.modalTitle {
+    margin-bottom: 10px;
+}

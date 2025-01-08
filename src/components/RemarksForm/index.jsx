@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "../../components/Modal";
 import CustomButton from "../CustomBtn";
 import styles from "./RemarkForm.module.css";
+import { toast } from "react-toastify";
 
 function RemarksForm({ closeModal }) {
     const [checklist, setChecklist] = useState({
@@ -85,9 +86,12 @@ function RemarksForm({ closeModal }) {
     };
 
     const handleSave = async () => {
+        toast.success("New Remark saved");
+
         const userName = localStorage.getItem('userName'); // Assuming userName is stored in localStorage after login
+
         if (!userName) {
-            alert("User is not logged in.");
+            // toast.success("New Remark saved");
             return;
         }
 
@@ -157,7 +161,7 @@ function RemarksForm({ closeModal }) {
     return (
         <Modal closeModal={closeModal}>
             <div className={styles.checklistForm}>
-                <h2>Dispatcher Duty Handover Form</h2>
+                <h2 className={styles.modalTitle}>Dispatcher Duty Handover Form</h2>
                 <div>
                     <ChecklistSection
                         title="Schedule and Operation"

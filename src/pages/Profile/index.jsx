@@ -8,7 +8,8 @@ import { useSelector } from "react-redux";
 
 const Profile = () => {
     const email = useSelector((state) => state.root.auth.email);
-
+    const token = useSelector((state) => state.root.auth.token)            
+    
     const initialValues = {
         oldPassword: "",
         newPassword: "",
@@ -27,13 +28,10 @@ const Profile = () => {
 
 
     const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
+        console.log("submit values", values);
+        
         try {
-            // Retrieve token from localStorage
-            const token = JSON.parse(localStorage.getItem("persist:root")).token
-                ? JSON.parse(JSON.parse(localStorage.getItem("persist:root")).token)
-                : null;
 
-            // Call the API
             const result = await changePassword(token, values.oldPassword, values.newPassword);
 
             // Show success toast and reset form
@@ -76,6 +74,7 @@ const Profile = () => {
                             <Field
                                 type="password"
                                 name="oldPassword"
+                                autoComplete="new-password"
                                 placeholder="Enter old password"
                                 className={styles.input}
                             />

@@ -11,6 +11,7 @@ const Login = () => {
     const navigate = useNavigate();
     const token = useSelector((state) => state.root.auth.token);
     const loading = useSelector((state) => state.root.auth.loading);
+    const error = useSelector((state) => state.root.auth.error); // Get the error message
 
     const formik = useFormik({
         initialValues: {
@@ -59,7 +60,7 @@ const Login = () => {
                     <input
                         id="password"
                         name="password"
-                        autocomplete="current-password"
+                        autoComplete="current-password"
                         type="password"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -68,6 +69,9 @@ const Login = () => {
                     />
                     {formik.touched.password && formik.errors.password && <div className={styles.error}>{formik.errors.password}</div>}
                 </div>
+
+                {error && <div className={styles.error}>{error}</div>}
+
 
                 <button disabled={loading} type="submit" className={styles.button}>{loading ? "Submiting..." : "Submit"}</button>
             </form>

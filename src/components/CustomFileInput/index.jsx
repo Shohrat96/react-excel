@@ -16,7 +16,7 @@ const FileInput = ({ handleFileUpload }) => {
 
       {/* Custom button to trigger file input */}
       <label htmlFor="file-upload" className={styles.fileInputButton}>
-        Choose File
+        Upload Flight List
       </label>
 
       {/* Optional label text for file selection */}

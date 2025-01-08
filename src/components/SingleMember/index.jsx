@@ -4,14 +4,34 @@ import styles from "./SingleMember.module.css";
 import CustomButton from "../CustomBtn";
 import { FLIGHT_TABLE_HEADERS } from "../../types/constants";
 import { formatTAFData } from "../../utils/formatTAFdata";
+import { FaEdit } from "react-icons/fa";
+import CustomModal from "../CustomModal";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-
-const FlightsTable = ({ data, headers, member, setData }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+const FlightsTable = ({ data, headers, member }) => {
   const [showNAJOnly, setShowNAJOnly] = useState(false);
-  const [showWarningsOnly, setShowWarningsOnly] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // const [notifications, setNotifications] = useState([]);
 
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+  const handleSubmit = (values) => {
+    // const payload = {
+    //     flight_number: flightNumber,
+    //     flight_date: cellValue,
+    //     user_email: userEmail,
+    //     remark: values.remark,
+    //     insertion_date: new Date().toISOString(),
+    //     update_date: new Date().toISOString(),
+    // };
+
+    // Replace this with your API call to save the data to the database
+    console.log("Submitting payload:");
+    toggleModal();
+  };
   const [selectedDestinations, setSelectedDestinations] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -33,37 +53,6 @@ const FlightsTable = ({ data, headers, member, setData }) => {
     const wb = XLSX.utils.table_to_book(tableRef.current);
     XLSX.writeFile(wb, `${member}.xlsx`);
   }, [member]);
-
-
-  // Memoized filtering logic
-  // const filteredData = useMemo(() => {
-  //   if (!data) return null;
-  //   return data.filter(Boolean).filter(row => {
-  //     const hasNAJ = Object.values(row).some(value =>
-  //       String(value).trim().toUpperCase() === "NAJ"
-  //     );
-  //     if (showNAJOnly && !hasNAJ) return false;
-
-  //     if (showWarningsOnly && !row.isWarning) return false;
-
-  //     if (searchTerm) {
-  //       return Object.values(row).some(value => {
-  //         if (selectedDestinations.length) {
-  //           return String(value).toLowerCase().includes(searchTerm.toLowerCase()) && selectedDestinations.includes(row.destination)
-  //         }
-  //         return String(value).toLowerCase().includes(searchTerm.toLowerCase())
-  //       }
-
-  //       );
-  //     }
-
-  //     if (selectedDestinations.length > 0) {
-  //       return selectedDestinations.includes(row.destination);
-  //     }
-
-  //     return true;
-  //   });
-  // }, [data, searchTerm, showNAJOnly, showWarningsOnly, selectedDestinations]);
 
 
   const validHeaders = typeof headers === "object" && headers !== null;
@@ -133,6 +122,23 @@ const FlightsTable = ({ data, headers, member, setData }) => {
                     );
                   }
 
+                  if (
+                    headers[value] === FLIGHT_TABLE_HEADERS.date
+                  ) {
+                    return <td key={value} className={styles.dateCell}>
+                      <div className={styles.cellValue}>
+                        {cellValue}
+                        <div className={styles.iconWrapper} onClick={toggleModal}>
+                          <FaEdit
+                            className={styles.editIcon}
+                            title="Add Remark"
+                            color="#2c3e50"
+                          />
+                        </div>
+                      </div>
+                    </td>;
+                  }
+
                   // Default case for rendering the cell
                   return <td key={value}>{cellValue}</td>;
                 })}
@@ -143,6 +149,47 @@ const FlightsTable = ({ data, headers, member, setData }) => {
         </table>
       ) : (
         <p>No data available to display.</p>
+      )}
+
+      {isModalOpen && (
+        <CustomModal onClose={toggleModal}>
+          <div className={styles.modalContent}>
+            <h3>Add Remark</h3>
+            <Formik
+              initialValues={{ remark: "" }}
+              validationSchema={Yup.object({
+                remark: Yup.string()
+                  .required("Remark is required")
+              })}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="remark">Remark</label>
+                    <Field
+                      name="remark"
+                      as="textarea"
+                      className={styles.textArea}
+                    />
+                    <ErrorMessage
+                      name="remark"
+                      component="div"
+                      className={styles.error}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={styles.submitButton}
+                  >
+                    Submit
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </CustomModal>
       )}
     </div>
   );
