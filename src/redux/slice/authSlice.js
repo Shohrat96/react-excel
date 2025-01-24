@@ -45,7 +45,7 @@ export const login = (credentials) => async (dispatch) => {
         dispatch(loginSuccess({ email: data.email, token: data.token }));
     } catch (error) {
         console.log('Error in login:', error);
-        
+
         dispatch(loginFailure(error?.message));
     }
 };
@@ -55,6 +55,9 @@ export const logoutAsync = () => (dispatch) => {
 
     dispatch(logout());
 };
+
+export const selectAuth = (state) => state.root.auth;
+
 
 export const { loginRequest, loginSuccess, loginFailure, logout } = authSlice.actions;
 export default authSlice.reducer;

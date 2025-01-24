@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import styles from "./Sidebar.module.css"; // Importing CSS module
 
 // Sample icons (you can replace these with your desired icons)
-import { FaPlane, FaTachometerAlt, FaTimes } from "react-icons/fa";
+import { FaPlane, FaTachometerAlt, FaCommentDots } from "react-icons/fa";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
 
@@ -21,19 +21,24 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         </button>
       </div>
       <ul className={styles.menu}>
-        <Link to="/">
-          <li className={styles.menuItem}>
-
+        <NavLink to="/" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem} >
+          <li className={styles.menuListItem}>
             <FaTachometerAlt className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Monitoring</span>}
           </li>
-        </Link>
-        <Link to="/workload">
-          <li className={styles.menuItem}>
+        </NavLink>
+        <NavLink to="/workload" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
+          <li className={styles.menuListItem}>
             <FaPlane className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Workload</span>}
           </li>
-        </Link>
+        </NavLink>
+        <NavLink to="/remarks" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
+          <li className={styles.menuListItem}>
+            <FaCommentDots className={styles.icon} />
+            {!collapsed && <span className={styles.menuTitle}>Remarks</span>}
+          </li>
+        </NavLink>
 
       </ul>
     </div>

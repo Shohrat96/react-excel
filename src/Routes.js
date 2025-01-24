@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Profile from "./pages/Profile";
+import RemarksPage from "./pages/Remarks";
 
 
 const AppRoutes = () => (
@@ -24,6 +25,7 @@ const AppRoutes = () => (
         >
             <Route path="/" element={<MonitoringPage />} />
             <Route path="workload" element={<WorkloadPage />} />
+            <Route path="remarks" element={<RemarksPage />} />
             <Route path="profile" element={<Profile />} />
         </Route>
     </Routes>

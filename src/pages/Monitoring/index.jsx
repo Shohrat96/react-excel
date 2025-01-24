@@ -12,7 +12,7 @@ import SingleMember from "../../components/SingleMember";
 import styles from "./Monitoring.module.css";
 import CustomSliderComponent from "../../components/CustomSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly } from "../../redux/slice/flightsSlice";
+import { resetFlights, selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly } from "../../redux/slice/flightsSlice";
 import restartWebsocket from "../../api/restartWebSocket";
 import RemarksForm from "../../components/RemarksForm";
 
@@ -39,7 +39,7 @@ function MonitoringPage() {
         dispatch(toggleMonitoring(started))
     }, [])
 
-    const { isLoading } = useWebSocket(updateFlightsUI, monitoringStarted, setLastUpdatedWeather)
+    const { isLoading } = useWebSocket(updateFlightsUI, setLastUpdatedWeather)
 
     const membersData = useMemo(() => {
         if (flightList?.length > 0) {
@@ -98,8 +98,11 @@ function MonitoringPage() {
             <div className={styles.header}>
                 <div className={styles.controlsWrapper}>
                     <CustomFileInput handleFileUpload={(e) => {
+                        // dispatch(resetFlights())
                         setMonitoringStarted(false)
-                        handleFileUpload(e, data => dispatch(setFlightList(data)))
+                        handleFileUpload(e, data => {
+                            dispatch(setFlightList(data))
+                        })
                     }} />
                     <div className={styles.selectAndUpload}>
                         <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights} />

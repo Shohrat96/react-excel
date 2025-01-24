@@ -7,23 +7,25 @@ import styles from "./Workload.module.css";
 import handleFileUpload from "../../utils/readFlightsFromExcel";
 import CustomFileInput from "../../components/CustomFileInput";
 import Dropdown from "../../components/CustomDropDown";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFlights } from "../../redux/slice/flightsSlice";
+import { selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations } from "../../redux/slice/workload";
 
 const WorkloadPage = () => {
+    const { flightListToFilter, filteredFlightList, searchTerm, selectedDestinations } = useSelector(selectFlightsFilter)
+    const state = useSelector(state => state)
 
     const [members, setMembers] = useState(1);
     const [data, setData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    // const [searchTerm, setSearchTerm] = useState("");
+    const dispatch = useDispatch()
 
-    const [selectedDestinations, setSelectedDestinations] = useState([]);
+    // const [selectedDestinations, setSelectedDestinations] = useState([]);
     const [destinations, setDestinations] = useState([]);
     // const destinations = [...new Set(data.map(flight => flight.destination))]; // Extract unique destinations from data
 
 
-    useEffect(() => {
-        // Update destinations whenever `data` changes
-        const uniqueDestinations = [...new Set(data.map(flight => flight.destination))];
-        setDestinations(uniqueDestinations);
-    }, [data]);
+    const uniqueDestinations = [...new Set(flightListToFilter.map(flight => flight.destination))];
 
     const onSelect = (v) => {
         setMembers(v.target.value);
@@ -31,13 +33,13 @@ const WorkloadPage = () => {
 
     // Function to handle search term update
     const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
+        dispatch(setSearchTerm(e.target.value));
     };
 
 
     const filteredData = useMemo(() => {
-        if (!data) return null;
-        return data.filter(Boolean).filter(row => {
+        if (!flightListToFilter) return null;
+        return flightListToFilter.filter(Boolean).filter(row => {
 
             if (searchTerm) {
                 return Object.values(row).some(value => {
@@ -48,25 +50,26 @@ const WorkloadPage = () => {
                 }
                 );
             }
-            if (selectedDestinations.length > 0) {
+            if (selectedDestinations?.length > 0) {
                 return (selectedDestinations.includes(row.destination) || selectedDestinations.includes(row.origin));
             }
 
             return true;
         });
-    }, [data, searchTerm, selectedDestinations]);
+    }, [flightListToFilter, searchTerm, selectedDestinations]);
 
     const membersData = useMemo(() => {
         if (filteredData?.length > 0) {
+
             return shareFlightsByMembers(filteredData, members);
         }
         return {};
     }, [members, filteredData]);
 
 
-    const sortedDestinations = destinations.sort((a, b) => {
-        const aIndex = selectedDestinations.indexOf(a);
-        const bIndex = selectedDestinations.indexOf(b);
+    const sortedDestinations = (uniqueDestinations || []).slice().sort((a, b) => {
+        const aIndex = (selectedDestinations || []).indexOf(a);
+        const bIndex = (selectedDestinations || []).indexOf(b);
 
         if (aIndex !== -1 && bIndex !== -1) {
             return aIndex - bIndex;
@@ -79,25 +82,34 @@ const WorkloadPage = () => {
         }
     });
 
+
     const handleCheckboxChange = (e) => {
-        setSelectedDestinations((prev) => {
-            if (prev.includes(e.target.value)) {
-                return prev.filter((dest) => dest !== e.target.value);
-            }
-            return [...prev, e.target.value];
-        })
-    }
+        const value = e.target.value;
+        let updatedDestinations = selectedDestinations || [];  // Ensure it's always an array
+
+        if (updatedDestinations.includes(value)) {
+            updatedDestinations = updatedDestinations.filter((dest) => dest !== value);
+        } else {
+            updatedDestinations = [...updatedDestinations, value];
+        }
+
+        dispatch(setSelectedDestinations(updatedDestinations));
+    };
+
 
     return (
         <div className={styles.container}>
             <div className={styles.fileInputMemberWrapper}>
                 <CustomFileInput handleFileUpload={(e) => {
-                    handleFileUpload(e, setData)
+                    handleFileUpload(e, (data) => {
+                        dispatch(setFlightListToFilter(data));
+                        dispatch(setFilteredFlightList(data));
+                    })
                 }} />
-                <SelectInput onSelect={onSelect} disabled={!data?.length} />
+                <SelectInput onSelect={onSelect} disabled={!flightListToFilter?.length} />
             </div>
             {
-                data.length ? (
+                flightListToFilter.length ? (
                     <div className={styles.control}>
                         <input
                             type="text"

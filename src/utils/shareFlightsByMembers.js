@@ -1,6 +1,11 @@
 export const shareFlightsByMembers = (flights, memberCount) => {
 
   if (flights.length === 0) return {};
+  if (flights.length === 1) {
+    return {
+      member1: [flights[0]]
+    }
+  }
   const res = {};
   // res = { member1: [], member2: [] }
 

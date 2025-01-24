@@ -8,28 +8,31 @@ import { FaEdit } from "react-icons/fa";
 import CustomModal from "../CustomModal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuth } from "../../redux/slice/authSlice";
+import { addRemarksAsync } from "../../redux/slice/remarkSlice";
 
 const FlightsTable = ({ data, headers, member }) => {
-  const [showNAJOnly, setShowNAJOnly] = useState(false);
+  // const [showNAJOnly, setShowNAJOnly] = useState(false);
+  const [selectedFlightForRemark, setSelectedFlightForRemark] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { email } = useSelector(selectAuth);
+
+  const dispatch = useDispatch();
+
   // const [notifications, setNotifications] = useState([]);
 
 
-  const toggleModal = () => {
+  const toggleModal = (flight) => {
+    if (!isModalOpen) {
+      setSelectedFlightForRemark(flight)
+    } else {
+      setSelectedFlightForRemark(null)
+    }
     setIsModalOpen(!isModalOpen);
   };
-  const handleSubmit = (values) => {
-    // const payload = {
-    //     flight_number: flightNumber,
-    //     flight_date: cellValue,
-    //     user_email: userEmail,
-    //     remark: values.remark,
-    //     insertion_date: new Date().toISOString(),
-    //     update_date: new Date().toISOString(),
-    // };
-
-    // Replace this with your API call to save the data to the database
-    console.log("Submitting payload:");
+  const handleSubmit = (remarkValue) => {
+    dispatch(addRemarksAsync({ remark: remarkValue.remark, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
     toggleModal();
   };
   const [selectedDestinations, setSelectedDestinations] = useState([]);
@@ -43,9 +46,9 @@ const FlightsTable = ({ data, headers, member }) => {
   const tableRef = useRef();
 
   // Function to toggle the NAJ filter
-  const toggleNAJFilter = () => {
-    setShowNAJOnly((prev) => !prev);
-  };
+  // const toggleNAJFilter = () => {
+  //   setShowNAJOnly((prev) => !prev);
+  // };
 
   // Export to XLSX
   const xport = useCallback(() => {
@@ -92,7 +95,7 @@ const FlightsTable = ({ data, headers, member }) => {
             {data.map((row, index) => (
               <tr key={index} className={row?.isWarning ? styles.warningRow : ""}>
                 {Object.keys(headers).map((value, idx) => {
-                  const cellValue = row[value] || "";
+                  const cellValue = row?.[value] || "";
                   if (
                     headers[value] === FLIGHT_TABLE_HEADERS.TAF_DEP ||
                     headers[value] === FLIGHT_TABLE_HEADERS.TAF_DEST
@@ -128,7 +131,7 @@ const FlightsTable = ({ data, headers, member }) => {
                     return <td key={value} className={styles.dateCell}>
                       <div className={styles.cellValue}>
                         {cellValue}
-                        <div className={styles.iconWrapper} onClick={toggleModal}>
+                        <div className={styles.iconWrapper} onClick={() => toggleModal(row)}>
                           <FaEdit
                             className={styles.editIcon}
                             title="Add Remark"

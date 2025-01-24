@@ -4,6 +4,8 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage
 import authReducer from "../slice/authSlice";
 import { thunk } from "redux-thunk";
 import flightsReducer from '../slice/flightsSlice';
+import filterFlightsReducer from '../slice/workload';
+import remarksReducer from '../slice/remarkSlice';
 
 const persistConfig = {
     key: "root",
@@ -12,7 +14,9 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    flights: flightsReducer
+    flights: flightsReducer,
+    filteredFlights: filterFlightsReducer,
+    remarks: remarksReducer
     // flight: flightReducer,
     // notes: notesReducer,
 });
@@ -26,7 +30,7 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false, // Disable serializable checks for redux-persist
-        }).concat(thunk), // Add thunk middleware if necessary
+        }).concat(thunk),
 });
 
 export const persistor = persistStore(store);

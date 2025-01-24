@@ -107,11 +107,13 @@
 }
 
 .iconWrapper {
-  position: absolute;
+  /* position: absolute; */
   cursor: pointer;
-  left: 50%;
+  display: flex;
+  justify-content: center;
+  /* left: 50%;
   transform: translateX(-50%);
-  bottom: -30px;
+  bottom: -30px; */
 }
 
 .modalContent {

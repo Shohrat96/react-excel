@@ -17,14 +17,13 @@ const handleFileUpload = (e, cb) => {
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-        const date = parsedData[1]["__EMPTY_1"].split(" ")[1];
-
         let clearedData = parsedData.filter((item) => {
           return (
             Object.keys(item).length >= 8 &&
             !item["__EMPTY_4"].includes("LY-")
           );
         });
+
         clearedData = clearedData.map((item, idx) => {
 
           return {

@@ -101,7 +101,6 @@ function RemarksForm({ closeModal }) {
             remarksHistory: checklist.remarksHistory,
             userName: userName, // Use userName from localStorage
         };
-        console.log("Request Data:", requestData);
 
         try {
             const response = await fetch("/checklist/save", {
@@ -114,7 +113,6 @@ function RemarksForm({ closeModal }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.message);
                 alert("Checklist saved successfully!");
                 closeModal();
             } else {

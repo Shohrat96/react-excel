@@ -32,6 +32,13 @@ const flightsSlice = createSlice({
             const { flightId, remark } = action.payload;
             state.remarks[flightId] = remark;
         },
+        resetFlights: (state) => {
+            state.flightList = [];
+            state.monitoringStarted = false;
+            state.lastUpdate = '';
+            state.showAlertsOnly = false;
+            state.remarks = [];
+        }
     },
 });
 
@@ -42,6 +49,7 @@ export const {
     setLastUpdate,
     toggleShowAlertsOnly,
     setRemarks,
+    resetFlights
 } = flightsSlice.actions;
 
 

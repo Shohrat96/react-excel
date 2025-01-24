@@ -87,3 +87,12 @@
 .collapsed .menuTitle {
   display: none;
 }
+
+.active {
+  background-color: #34495e;
+}
+
+.menuListItem {
+  display: flex;
+  align-items: center;
+}

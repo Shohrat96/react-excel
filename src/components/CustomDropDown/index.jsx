@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from './Dropdown.module.css';
 
 const Dropdown = ({ destinations, selectedDestinations, handleCheckboxChange }) => {
+
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const dropdownRef = useRef(null); // Ref for the dropdown menu
 

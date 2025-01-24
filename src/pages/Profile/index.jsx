@@ -8,8 +8,8 @@ import { useSelector } from "react-redux";
 
 const Profile = () => {
     const email = useSelector((state) => state.root.auth.email);
-    const token = useSelector((state) => state.root.auth.token)            
-    
+    const token = useSelector((state) => state.root.auth.token)
+
     const initialValues = {
         oldPassword: "",
         newPassword: "",
@@ -28,8 +28,7 @@ const Profile = () => {
 
 
     const handleSubmit = async (values, { setSubmitting, setErrors, resetForm }) => {
-        console.log("submit values", values);
-        
+
         try {
 
             const result = await changePassword(token, values.oldPassword, values.newPassword);
