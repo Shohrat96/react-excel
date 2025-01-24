@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Profile from "./pages/Profile";
 import RemarksPage from "./pages/Remarks";
+import Checklist from "./pages/Checklist";
+
 
 
 const AppRoutes = () => (
@@ -27,6 +29,7 @@ const AppRoutes = () => (
             <Route path="workload" element={<WorkloadPage />} />
             <Route path="remarks" element={<RemarksPage />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="checklist" element={<Checklist />} />
         </Route>
     </Routes>
 );
