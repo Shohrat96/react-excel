@@ -2,8 +2,8 @@ import React from "react";
 import styles from "./Sidebar.module.css"; // Importing CSS module
 
 // Sample icons (you can replace these with your desired icons)
-import { FaPlane, FaTachometerAlt, FaCommentDots } from "react-icons/fa";
-import { FaPlane, FaTachometerAlt, FaListAlt } from "react-icons/fa";
+import { FaPlane, FaCommentDots } from "react-icons/fa";
+import { FaTachometerAlt, FaListAlt } from "react-icons/fa";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { Link, NavLink } from "react-router-dom";
 
@@ -41,7 +41,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         </NavLink>
 
         <NavLink to="/checklist" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
-          <li className={styles.menuItem}>
+          <li className={styles.menuListItem}>
             <FaListAlt className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Checklist</span>}
           </li>

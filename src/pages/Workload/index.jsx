@@ -103,7 +103,7 @@ const WorkloadPage = () => {
                 <CustomFileInput handleFileUpload={(e) => {
                     handleFileUpload(e, (data) => {
                         dispatch(setFlightListToFilter(data));
-                        dispatch(setFilteredFlightList(data));
+                        // dispatch(setFilteredFlightList(data));
                     })
                 }} />
                 <SelectInput onSelect={onSelect} disabled={!flightListToFilter?.length} />

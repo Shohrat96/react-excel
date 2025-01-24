@@ -6,11 +6,14 @@
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
-      padding: 16px;
+      padding-inline: 16px;
   }
 
   .selectAndUpload {
       margin-top: 16px;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
   }
 
   /* Normal Usage */
@@ -82,4 +85,18 @@
 
   .onlyAlerts {
       margin-left: auto;
+  }
+
+  .control {
+      margin-bottom: 16px;
+      max-width: 350px;
+      display: flex;
+  }
+
+  /* Input */
+  .controlInput {
+      padding: 10px;
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 4px;
   }

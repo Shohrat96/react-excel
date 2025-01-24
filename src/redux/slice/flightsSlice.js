@@ -2,11 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     flightList: [],
+    filteredFlights: [],
     monitoringStarted: false,
     lastUpdate: '',
     showAlertsOnly: false,
     remarks: [],
+    searchTerm: ""
 };
+
 
 const flightsSlice = createSlice({
     name: 'flights',
@@ -15,6 +18,12 @@ const flightsSlice = createSlice({
         // Action to set the flight list
         setFlightList: (state, action) => {
             state.flightList = action.payload;
+        },
+        setSearchTerm: (state, action) => {
+            state.searchTerm = action.payload;
+        },
+        setFilteredFlightList: (state, action) => {
+            state.filteredFlights = action.payload;
         },
         // Action to start or stop flight monitoring
         toggleMonitoring: (state, action) => {
@@ -49,7 +58,9 @@ export const {
     setLastUpdate,
     toggleShowAlertsOnly,
     setRemarks,
-    resetFlights
+    resetFlights,
+    setFilteredFlightList,
+    setSearchTerm
 } = flightsSlice.actions;
 
 
