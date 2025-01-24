@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Sidebar.module.css"; // Importing CSS module
 
-// Sample icons (you can replace these with your desired icons)
-import { FaPlane, FaTachometerAlt, FaTimes } from "react-icons/fa";
+import { FaPlane, FaTachometerAlt, FaListAlt } from "react-icons/fa";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
-
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
   };
@@ -23,7 +21,6 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       <ul className={styles.menu}>
         <Link to="/">
           <li className={styles.menuItem}>
-
             <FaTachometerAlt className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Monitoring</span>}
           </li>
@@ -34,7 +31,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
             {!collapsed && <span className={styles.menuTitle}>Workload</span>}
           </li>
         </Link>
-
+        <Link to="/checklist">
+          <li className={styles.menuItem}>
+            <FaListAlt className={styles.icon} />
+            {!collapsed && <span className={styles.menuTitle}>Checklist</span>}
+          </li>
+        </Link>
       </ul>
     </div>
   );

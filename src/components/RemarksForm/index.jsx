@@ -3,6 +3,7 @@ import Modal from "../../components/Modal";
 import CustomButton from "../CustomBtn";
 import styles from "./RemarkForm.module.css";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux"; // Import useSelector from Redux
 
 function RemarksForm({ closeModal }) {
     const [checklist, setChecklist] = useState({
@@ -37,13 +38,15 @@ function RemarksForm({ closeModal }) {
         remarksHistory: [] // make sure this is always an array
     });
 
-
     const [responses, setResponses] = useState({
         scheduleOperations: {},
         flightDispatch: {},
     });
 
     const [isRemarksVisible, setRemarksVisible] = useState(false);
+
+    // Access the email from Redux store
+    const email = useSelector((state) => state.root.auth.email);
 
     // Load remarks history from localStorage
     useEffect(() => {
@@ -86,25 +89,25 @@ function RemarksForm({ closeModal }) {
     };
 
     const handleSave = async () => {
-        toast.success("New Remark saved");
-
-        const userName = localStorage.getItem('userName'); // Assuming userName is stored in localStorage after login
-
-        if (!userName) {
-            // toast.success("New Remark saved");
-            return;
+        if (!email) {
+            console.error("User not authenticated");
+            toast.error("You need to be authenticated to save remarks.");
+            return; // Stop execution if there's no email
         }
+
+        toast.success("New Checklist saved");
 
         const requestData = {
             scheduleOperations: responses.scheduleOperations,
             flightDispatch: responses.flightDispatch,
             remarksHistory: checklist.remarksHistory,
-            userName: userName, // Use userName from localStorage
+            email: email,
         };
+
         console.log("Request Data:", requestData);
 
         try {
-            const response = await fetch("/checklist/save", {
+            const response = await fetch('http://localhost:3001/api/checklist/save', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -115,7 +118,16 @@ function RemarksForm({ closeModal }) {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                alert("Checklist saved successfully!");
+
+                // Clear remarksHistory from localStorage after successful save
+                localStorage.removeItem("remarksHistory");
+
+                // Optionally clear remarksHistory in state
+                setChecklist((prev) => ({
+                    ...prev,
+                    remarksHistory: [],
+                }));
+
                 closeModal();
             } else {
                 throw new Error("Failed to save checklist.");
@@ -127,10 +139,18 @@ function RemarksForm({ closeModal }) {
     };
 
 
+    const allItemsSelected = () => {
+        // Check if all items in scheduleOperations are selected
+        const scheduleSelected = checklist.scheduleOperations.every((_, index) => responses.scheduleOperations[index]);
+        const flightDispatchSelected = checklist.flightDispatch.every((_, index) => responses.flightDispatch[index]);
+
+        return scheduleSelected && flightDispatchSelected;
+    };
+
     const ChecklistSection = ({ title, items, section }) => (
         <fieldset className={styles.section}>
             <legend>{title}</legend>
-            {items && items.length > 0 ? ( // Check if items exist before calling .map()
+            {items && items.length > 0 ? (
                 items.map((item, index) => (
                     <div key={index} className={styles.checklistItem}>
                         <label>{item}</label>
@@ -153,7 +173,7 @@ function RemarksForm({ closeModal }) {
                     </div>
                 ))
             ) : (
-                <p>No items to display</p> // Display message if items array is empty or undefined
+                <p>No items to display</p>
             )}
         </fieldset>
     );
@@ -221,7 +241,11 @@ function RemarksForm({ closeModal }) {
                         )}
                     </div>
                 </div>
-                <CustomButton title="Save" handleClick={handleSave} />
+                <CustomButton
+                    title="Save"
+                    handleClick={handleSave}
+                    disabled={!allItemsSelected()}
+                />
             </div>
         </Modal>
     );

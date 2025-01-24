@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Layout from "./pages/Layout";
 import Profile from "./pages/Profile";
+import Checklist from "./pages/Checklist";
+
 
 
 const AppRoutes = () => (
@@ -25,6 +27,7 @@ const AppRoutes = () => (
             <Route path="/" element={<MonitoringPage />} />
             <Route path="workload" element={<WorkloadPage />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="checklist" element={<Checklist />} />
         </Route>
     </Routes>
 );
