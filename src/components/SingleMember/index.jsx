@@ -172,6 +172,7 @@ const FlightsTable = ({ data, headers, member }) => {
                     <label htmlFor="remark">Remark</label>
                     <Field
                       name="remark"
+                      autoFocus
                       as="textarea"
                       className={styles.textArea}
                     />

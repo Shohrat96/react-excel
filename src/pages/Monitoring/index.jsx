@@ -12,20 +12,18 @@ import SingleMember from "../../components/SingleMember";
 import styles from "./Monitoring.module.css";
 import CustomSliderComponent from "../../components/CustomSlider";
 import { useDispatch, useSelector } from "react-redux";
-import { resetFlights, selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly } from "../../redux/slice/flightsSlice";
+import { resetFlights, selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly, setSearchTerm, setFilteredFlightList } from "../../redux/slice/flightsSlice";
 import restartWebsocket from "../../api/restartWebSocket";
 import RemarksForm from "../../components/RemarksForm";
 
 
 function MonitoringPage() {
     const dispatch = useDispatch()
-    const { flightList, lastUpdate, monitoringStarted, showAlertsOnly } = useSelector(selectFlights)
+    const { flightList, lastUpdate, monitoringStarted, showAlertsOnly, searchTerm, filteredFlights } = useSelector(selectFlights)
 
     const [loading, setLoading] = useState(false);
     const [members, setMembers] = useState(1);
-    // const [monitoringStarted, setMonitoringStarted] = useState(false)
-    // const [lastUpdatedWeather, setLastUpdatedWeather] = useState(null); // State to store the timestamp
-    const [showWarningsOnly, setShowWarningsOnly] = useState(false);
+
     const [showRemarksModal, setShowRemarksModal] = useState(false);
 
 
@@ -42,11 +40,15 @@ function MonitoringPage() {
     const { isLoading } = useWebSocket(updateFlightsUI, setLastUpdatedWeather)
 
     const membersData = useMemo(() => {
+
+        if (searchTerm) {
+            return shareFlightsByMembers(filteredFlights, members)
+        }
         if (flightList?.length > 0) {
             return shareFlightsByMembers(flightList, members);
         }
         return {};
-    }, [members, flightList]);
+    }, [members, flightList, searchTerm, filteredFlights]);
 
     const handleUploadFlights = async () => {
         if (flightList.length) {
@@ -92,30 +94,58 @@ function MonitoringPage() {
 
     }, [showAlertsOnly])
 
+    const handleSearchChange = (e) => {
+        const search = e.target.value?.trim();
+        dispatch(setSearchTerm(search));
+        dispatch(setFilteredFlightList(flightList.filter(row => {
+            if (search) {
+                return Object.values(row).some(value => {
+                    return String(value).toLowerCase().includes(e.target.value.toLowerCase())
+                });
+            }
+            return true;
+        })))
+    }
 
     return (
         <>
             <div className={styles.header}>
                 <div className={styles.controlsWrapper}>
-                    <CustomFileInput handleFileUpload={(e) => {
-                        // dispatch(resetFlights())
-                        setMonitoringStarted(false)
-                        handleFileUpload(e, data => {
-                            dispatch(setFlightList(data))
-                        })
-                    }} />
+                    <div className={styles.fileInputMemberWrapper}>
+                        <CustomFileInput handleFileUpload={(e) => {
+                            // dispatch(resetFlights())
+                            setMonitoringStarted(false)
+                            handleFileUpload(e, data => {
+                                dispatch(setFlightList(data))
+                            })
+                        }} />
+                        <div className={styles.timeStamp}>
+                            <span>Last update: {lastUpdate ? `${lastUpdate} UTC` : "Not Started"}</span>
+                        </div>
+                    </div>
+
                     <div className={styles.selectAndUpload}>
                         <CustomButton title={monitoringStarted ? "Refresh data" : "Start Monitoring"} handleClick={handleUploadFlights} />
+
+                        <div className={styles.control}>
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                className={styles.controlInput}
+                            />
+
+                            {/* <Dropdown destinations={sortedDestinations} selectedDestinations={selectedDestinations} handleCheckboxChange={handleCheckboxChange} /> */}
+                        </div>
+
                     </div>
                 </div>
 
-                <div className={styles.timeStamp}>
-                    <span>Last update: {lastUpdate ? `${lastUpdate} UTC` : "Not Started"}</span>
-                </div>
 
                 <div className={styles.onlyAlerts}>
                     <CustomSliderComponent active={showAlertsOnly} toggleActive={toggleWarningsFilter} title="Alerts only" />
-                    <div className={styles.controlsWrapper}>
+                    <div className={styles.checkList}>
                         {/* Add Remarks Button */}
                         <CustomButton
                             title="CheckList"

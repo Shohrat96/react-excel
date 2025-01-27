@@ -16,6 +16,10 @@
       gap: 16px;
   }
 
+  .selectAndUpload button {
+      flex: 1;
+  }
+
   /* Normal Usage */
   .spinner:before {
       transform: rotateX(60deg) rotateY(45deg) rotateZ(45deg);
@@ -72,12 +76,16 @@
 
   .header {
       display: flex;
-      align-items: baseline;
+      align-items: flex-end;
       padding: 16px;
       gap: 16px;
   }
 
-  .controlsWrapper {}
+  .checkList {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+  }
 
   .timeStamp span {
       color: rgba(25, 25, 25, 0.5);
@@ -88,7 +96,6 @@
   }
 
   .control {
-      margin-bottom: 16px;
       max-width: 350px;
       display: flex;
   }
@@ -99,4 +106,10 @@
       flex: 1;
       border: 1px solid #ddd;
       border-radius: 4px;
+  }
+
+  .fileInputMemberWrapper {
+      display: flex;
+      gap: 16px;
+      align-items: center;
   }

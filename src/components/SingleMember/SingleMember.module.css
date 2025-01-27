@@ -1,12 +1,7 @@
 /* General styling for the table */
 .tableContainer {
   flex: 1;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: bold;
+
 }
 
 .flightsTable {
@@ -29,6 +24,9 @@
   color: white;
   text-transform: uppercase;
   font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .flightsTable td {

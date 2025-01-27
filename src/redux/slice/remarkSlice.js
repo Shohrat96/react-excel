@@ -4,6 +4,9 @@ import { toast } from 'react-toastify';
 
 const initialState = {
     remarks: [],
+    currentPage: 1,
+    totalItems: 0,
+    totalPages: 0,
     loading: false,
     error: null,
 };
@@ -21,8 +24,14 @@ const remarksSlice = createSlice({
             state.remarks = [...state.remarks, action.payload];
             state.error = null;
         },
+        setCurrentPage: (state, action) => {
+            state.currentPage = action.payload;
+        },
         setRemarksSuccess: (state, action) => {
-            state.remarks = [...action.payload];
+            state.remarks = [...action.payload?.remarks];
+            state.currentPage = action.payload?.currentPage;
+            state.totalItems = action.payload?.totalItems;
+            state.totalPages = action.payload?.totalPages;
             state.loading = false;
         },
         setRemarksFailure: (state, action) => {
@@ -39,6 +48,7 @@ export const {
     setRemarksRequest,
     setRemarksSuccess,
     setRemarksFailure,
+    setCurrentPage
 } = remarksSlice.actions;
 
 
@@ -57,11 +67,13 @@ export const addRemarksAsync = (remark) => async (dispatch) => {
     }
 };
 
-export const getRemarksAsync = () => async (dispatch, getState) => {
+export const getRemarksAsync = (page) => async (dispatch, getState) => {
 
     dispatch(setRemarksRequest());
     try {
-        const data = await getAllRemarks();
+        const data = await getAllRemarks(page);
+        // console.log("data in remark: ", data);
+
         dispatch(setRemarksSuccess(data));
     } catch (error) {
         console.log("Error in set remarks:", error);

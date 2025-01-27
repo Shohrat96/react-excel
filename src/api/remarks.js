@@ -12,12 +12,14 @@ export const addRemark = async (remarkData) => {
     }
 };
 
-export const getAllRemarks = async () => {
+export const getAllRemarks = async (page = 1) => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/remarks/all`);
+        const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}`
+        );
         return response.data;
     } catch (error) {
-        console.error('Error getting remarks data:', error);
+        console.error("Error getting remarks data:", error);
         throw error.response ? error.response.data : error.message;
     }
-}
+};
