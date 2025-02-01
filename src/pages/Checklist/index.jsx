@@ -51,7 +51,6 @@ function ChecklistPage() {
                 setLoading(true);
                 const response = await axios.get("http://localhost:3001/api/checklist/all");
                 setChecklistData(response.data);
-                console.log("API Data:", response.data);
             } catch (error) {
                 console.error("Error fetching checklist data:", error);
                 setError("Failed to fetch checklist data. Please try again later.");

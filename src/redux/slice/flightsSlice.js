@@ -43,10 +43,12 @@ const flightsSlice = createSlice({
         },
         resetFlights: (state) => {
             state.flightList = [];
+            state.filteredFlights = []
             state.monitoringStarted = false;
             state.lastUpdate = '';
             state.showAlertsOnly = false;
             state.remarks = [];
+            state.searchTerm = ""
         }
     },
 });

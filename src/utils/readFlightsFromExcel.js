@@ -6,7 +6,9 @@ dayjs.extend(customParseFormat);
 
 
 const handleFileUpload = (e, cb) => {
+
   const files = e.target.files;
+  if (!files.length) return;
   const filePromises = Array.from(files).map((file, idx) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -56,7 +58,6 @@ const handleFileUpload = (e, cb) => {
       return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0;
     });
 
-    // Pass the sorted data to the callback
     cb(sortedData);
   });
 };

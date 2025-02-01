@@ -115,7 +115,6 @@ function RemarksForm({ closeModal }) {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.message);
 
                 // Clear remarksHistory from localStorage after successful save
                 localStorage.removeItem("remarksHistory");

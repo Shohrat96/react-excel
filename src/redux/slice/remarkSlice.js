@@ -61,7 +61,6 @@ export const addRemarksAsync = (remark) => async (dispatch) => {
         dispatch(addNewRemark(remark));
         toast.success('Remark added successfully!');
     } catch (error) {
-        console.log('Error in set remarks:', error);
         dispatch(setRemarksFailure(error?.message));
         toast.error('Could not add a new remark')
     }
@@ -72,8 +71,6 @@ export const getRemarksAsync = (page) => async (dispatch, getState) => {
     dispatch(setRemarksRequest());
     try {
         const data = await getAllRemarks(page);
-        // console.log("data in remark: ", data);
-
         dispatch(setRemarksSuccess(data));
     } catch (error) {
         console.log("Error in set remarks:", error);

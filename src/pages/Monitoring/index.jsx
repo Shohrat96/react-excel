@@ -40,7 +40,6 @@ function MonitoringPage() {
     const { isLoading } = useWebSocket(updateFlightsUI, setLastUpdatedWeather)
 
     const membersData = useMemo(() => {
-
         if (searchTerm) {
             return shareFlightsByMembers(filteredFlights, members)
         }
@@ -113,10 +112,12 @@ function MonitoringPage() {
                 <div className={styles.controlsWrapper}>
                     <div className={styles.fileInputMemberWrapper}>
                         <CustomFileInput handleFileUpload={(e) => {
-                            // dispatch(resetFlights())
                             setMonitoringStarted(false)
+                            dispatch(resetFlights())
                             handleFileUpload(e, data => {
-                                dispatch(setFlightList(data))
+                                if (data.length > 0) {
+                                    dispatch(setFlightList([...data]))
+                                }
                             })
                         }} />
                         <div className={styles.timeStamp}>

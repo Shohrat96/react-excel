@@ -32,6 +32,7 @@
 .flightsTable td {
   background-color: #fff;
   color: #555;
+  font-size: 14px;
 }
 
 /* Alternating row colors */

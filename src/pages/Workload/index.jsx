@@ -9,10 +9,15 @@ import CustomFileInput from "../../components/CustomFileInput";
 import Dropdown from "../../components/CustomDropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFlights } from "../../redux/slice/flightsSlice";
-import { selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations } from "../../redux/slice/workload";
+import { selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations, setSelectedShift } from "../../redux/slice/workload";
+import RadioButton from "../../components/RadioBtn";
+
+
+const SHIFT_OPTIONS = ["day", "night", "all"]
+
 
 const WorkloadPage = () => {
-    const { flightListToFilter, filteredFlightList, searchTerm, selectedDestinations } = useSelector(selectFlightsFilter)
+    const { flightListToFilter, filteredFlightList, searchTerm, selectedDestinations, selectedShift } = useSelector(selectFlightsFilter)
     const state = useSelector(state => state)
 
     const [members, setMembers] = useState(1);
@@ -39,7 +44,12 @@ const WorkloadPage = () => {
 
     const filteredData = useMemo(() => {
         if (!flightListToFilter) return null;
-        return flightListToFilter.filter(Boolean).filter(row => {
+        let dataToFilter = flightListToFilter;
+
+        if (selectedShift === "day" || selectedShift === "night") {
+            dataToFilter = filteredFlightList
+        }
+        return dataToFilter.filter(Boolean).filter(row => {
 
             if (searchTerm) {
                 return Object.values(row).some(value => {
@@ -96,6 +106,10 @@ const WorkloadPage = () => {
         dispatch(setSelectedDestinations(updatedDestinations));
     };
 
+    const handleShiftSelect = (val) => {
+
+        dispatch(setSelectedShift(val))
+    }
 
     return (
         <div className={styles.container}>
@@ -120,6 +134,8 @@ const WorkloadPage = () => {
                         />
 
                         <Dropdown destinations={sortedDestinations} selectedDestinations={selectedDestinations} handleCheckboxChange={handleCheckboxChange} />
+
+                        <RadioButton options={SHIFT_OPTIONS} onSelect={handleShiftSelect} selected={selectedShift} />
                     </div>
                 ) : null
             }

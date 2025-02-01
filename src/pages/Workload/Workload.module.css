@@ -34,8 +34,10 @@
 
 .control {
     margin-bottom: 16px;
-    max-width: 350px;
+    max-width: 480px;
     display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .controlsWrapper {}
