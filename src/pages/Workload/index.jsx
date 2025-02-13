@@ -18,17 +18,9 @@ const SHIFT_OPTIONS = ["day", "night", "all"]
 
 const WorkloadPage = () => {
     const { flightListToFilter, filteredFlightList, searchTerm, selectedDestinations, selectedShift } = useSelector(selectFlightsFilter)
-    const state = useSelector(state => state)
 
     const [members, setMembers] = useState(1);
-    const [data, setData] = useState([]);
-    // const [searchTerm, setSearchTerm] = useState("");
     const dispatch = useDispatch()
-
-    // const [selectedDestinations, setSelectedDestinations] = useState([]);
-    const [destinations, setDestinations] = useState([]);
-    // const destinations = [...new Set(data.map(flight => flight.destination))]; // Extract unique destinations from data
-
 
     const uniqueDestinations = [...new Set(flightListToFilter.map(flight => flight.destination))];
 

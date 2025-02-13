@@ -103,27 +103,27 @@ const FlightsTable = ({ data, headers, member }) => {
                     return <td key={value}>{formatTAFData(cellValue)}</td>;
                   }
 
-                  if (
-                    headers[value] === FLIGHT_TABLE_HEADERS.origin ||
-                    headers[value] === FLIGHT_TABLE_HEADERS.destination
-                  ) {
-                    return (
-                      <td
-                        key={value}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          const url = `/jeppesen/${cellValue}`; // Validate the value before using it in a URL
-                          if (cellValue) {
-                            window.open(url, "_blank");
-                          } else {
-                            console.error("Invalid cell value for URL:", cellValue);
-                          }
-                        }}
-                      >
-                        {cellValue}
-                      </td>
-                    );
-                  }
+                  // if (
+                  //   headers[value] === FLIGHT_TABLE_HEADERS.origin ||
+                  //   headers[value] === FLIGHT_TABLE_HEADERS.destination
+                  // ) {
+                  //   return (
+                  //     <td
+                  //       key={value}
+                  //       style={{ cursor: "pointer" }}
+                  //       onClick={() => {
+                  //         const url = `/jeppesen/${cellValue}`; // Validate the value before using it in a URL
+                  //         if (cellValue) {
+                  //           window.open(url, "_blank");
+                  //         } else {
+                  //           console.error("Invalid cell value for URL:", cellValue);
+                  //         }
+                  //       }}
+                  //     >
+                  //       {cellValue}
+                  //     </td>
+                  //   );
+                  // }
 
                   if (
                     headers[value] === FLIGHT_TABLE_HEADERS.date

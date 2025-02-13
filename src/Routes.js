@@ -8,6 +8,7 @@ import Layout from "./pages/Layout";
 import Profile from "./pages/Profile";
 import RemarksPage from "./pages/Remarks";
 import Checklist from "./pages/Checklist";
+import UsefulLinks from "./pages/UsefulLinks";
 
 
 
@@ -30,6 +31,7 @@ const AppRoutes = () => (
             <Route path="remarks" element={<RemarksPage />} />
             <Route path="profile" element={<Profile />} />
             <Route path="checklist" element={<Checklist />} />
+            <Route path="usefulLinks" element={<UsefulLinks />} />
         </Route>
     </Routes>
 );
