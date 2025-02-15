@@ -31,8 +31,6 @@ const useWebSocket = (updateFlightsUI, setLastUpdatedWeather) => {
     };
 
     wsRef.current.onmessage = (event) => {
-      console.log("monitoring in line 28 websocket: ", monitoringRef.current);  // Use ref
-
       try {
         const updatedFlights = JSON.parse(event.data);
         updateFlightsUI(updatedFlights);
@@ -53,8 +51,6 @@ const useWebSocket = (updateFlightsUI, setLastUpdatedWeather) => {
     };
 
     wsRef.current.onclose = () => {
-      console.log("monitoringStarted (onclose): ", monitoringRef.current);  // Use ref
-
       console.log('WebSocket disconnected');
       setError('WebSocket disconnected');
       retryConnection();
@@ -79,7 +75,6 @@ const useWebSocket = (updateFlightsUI, setLastUpdatedWeather) => {
     if (monitoringStarted) {
       connectWebSocket();
     }
-    console.log("monitoring started (effect): ", monitoringStarted);
 
     return () => {
       if (wsRef.current) wsRef.current.close();

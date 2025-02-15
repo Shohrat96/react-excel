@@ -87,7 +87,7 @@ function MonitoringPage() {
     const flightsTableData = useCallback((data) => {
 
         return data.filter((item) => {
-            if (showAlertsOnly && !item?.isWarning) return false
+            if ((showAlertsOnly && !item?.isWarning) || !item) return false
             return true
         })
 
