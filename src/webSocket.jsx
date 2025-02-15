@@ -21,7 +21,7 @@ const useWebSocket = (updateFlightsUI, setLastUpdatedWeather) => {
     if (!monitoringRef.current) return;  // Use ref instead of state
 
     setIsLoading(true);
-    wsRef.current = new WebSocket('wss://flight-dispatch-server.onrender.com:8081');
+    wsRef.current = new WebSocket('wss://flight-dispatch-server.onrender.com:10000');
 
     wsRef.current.onopen = () => {
       setIsLoading(false);
