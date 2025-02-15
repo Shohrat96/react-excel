@@ -105,7 +105,7 @@ function RemarksForm({ closeModal }) {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/api/checklist/save', {
+            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/checklist/save`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

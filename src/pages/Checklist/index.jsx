@@ -49,7 +49,7 @@ function ChecklistPage() {
         const fetchChecklistData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:3001/api/checklist/all");
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/checklist/all`);
                 setChecklistData(response.data);
             } catch (error) {
                 console.error("Error fetching checklist data:", error);
