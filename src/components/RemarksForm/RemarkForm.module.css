@@ -161,3 +161,33 @@
 .modalTitle {
     margin-bottom: 10px;
 }
+
+
+
+.dispatcherDropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    outline: none;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.dispatcherDropdown:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+.dispatcherDropdown:hover {
+    border-color: #555;
+}
+
+.dispatcherDropdown option {
+    font-size: 14px;
+    padding: 10px;
+}

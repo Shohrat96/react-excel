@@ -43,7 +43,7 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
         <NavLink to="/checklist" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
           <li className={styles.menuListItem}>
             <FaListAlt className={styles.icon} />
-            {!collapsed && <span className={styles.menuTitle}>Checklist</span>}
+            {!collapsed && <span className={styles.menuTitle}>Handover</span>}
           </li>
         </NavLink>
       </ul>

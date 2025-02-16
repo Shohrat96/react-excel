@@ -32,8 +32,11 @@ function RemarksForm({ closeModal }) {
             "Report(s) and/or Request(s) by the Flight Crew for flight(s) in progress",
             "Loss of tracking data for flight(s) in progress",
             "Route Analysis request from Commercial department",
-            "Equipment, Hardware, Software malfunction in the office"
+            "Equipment, Hardware, Software malfunction in the office",
+            "Have the cargo details from Baku and outstations been received?",
+            "Any notes for ATC acknowledgement"
         ],
+        dispatcherTakingOver: "",
         remarks: "",
         remarksHistory: [] // make sure this is always an array
     });
@@ -41,6 +44,7 @@ function RemarksForm({ closeModal }) {
     const [responses, setResponses] = useState({
         scheduleOperations: {},
         flightDispatch: {},
+        dispatcherTakingOver: "",
     });
 
     const [isRemarksVisible, setRemarksVisible] = useState(false);
@@ -83,6 +87,7 @@ function RemarksForm({ closeModal }) {
             ...prev,
             remarks: "",
             remarksHistory: updatedHistory,
+
         }));
 
         localStorage.setItem("remarksHistory", JSON.stringify(updatedHistory));
@@ -101,8 +106,10 @@ function RemarksForm({ closeModal }) {
             scheduleOperations: responses.scheduleOperations,
             flightDispatch: responses.flightDispatch,
             remarksHistory: checklist.remarksHistory,
+            dispatcherTakingOver: checklist.dispatcherTakingOver,
             email: email,
         };
+        console.log("requestData", requestData);
 
         try {
             const response = await fetch('http://localhost:3001/api/checklist/save', {
@@ -112,6 +119,7 @@ function RemarksForm({ closeModal }) {
                 },
                 body: JSON.stringify(requestData),
             });
+
 
             if (response.ok) {
                 const data = await response.json();
@@ -140,8 +148,10 @@ function RemarksForm({ closeModal }) {
         // Check if all items in scheduleOperations are selected
         const scheduleSelected = checklist.scheduleOperations.every((_, index) => responses.scheduleOperations[index]);
         const flightDispatchSelected = checklist.flightDispatch.every((_, index) => responses.flightDispatch[index]);
+        const dispatcherSelected = checklist.dispatcherTakingOver.trim() !== "";  // Check if dispatcherTakingOver is selected
 
-        return scheduleSelected && flightDispatchSelected;
+
+        return scheduleSelected && flightDispatchSelected && dispatcherSelected;
     };
 
     const ChecklistSection = ({ title, items, section }) => (
@@ -237,13 +247,28 @@ function RemarksForm({ closeModal }) {
                             </div>
                         )}
                     </div>
+                    <h3 >Dispatcher - Taking Over</h3>
+                    <select
+                        className={styles.dispatcherDropdown}
+                        value={checklist.dispatcherTakingOver}
+                        onChange={(e) => setChecklist({ ...checklist, dispatcherTakingOver: e.target.value })}
+                    >
+                        <option value="">Select Dispatcher</option>
+                        <option value="Dispatcher 1">Dispatcher 1</option>
+                        <option value="Dispatcher 2">Dispatcher 2</option>
+                        <option value="Dispatcher 3">Dispatcher 3</option>
+                    </select>
+                    <CustomButton
+                        title="Save/ShiftLog"
+                        handleClick={handleSave}
+                        disabled={!allItemsSelected()}
+                    />
+
                 </div>
-                <CustomButton
-                    title="Save"
-                    handleClick={handleSave}
-                    disabled={!allItemsSelected()}
-                />
+
+
             </div>
+
         </Modal>
     );
 }

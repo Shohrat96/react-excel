@@ -1,14 +1,24 @@
-/* Checklist.module.css *
-
-/* Container for the page */
+/* General Page Styling */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
+.title {
+    text-align: center;
+    color: #34495e;
+    padding: 10px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 /* Search Filters */
 .search-filters {
@@ -39,104 +49,124 @@
     background-color: #e9ecef;
 }
 
-/* Checklist Entry */
-.checklist-entry {
-    background-color: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-}
-
-.checklist-entry:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.checklist-title {
-    margin: 0;
-    font-size: 18px;
-    color: #3498db;
-    cursor: pointer;
-}
-
-.checklist-title:hover {
-    text-decoration: underline;
-}
-
-/* Checklist Details */
-.checklist-details {
-    margin-top: 10px;
-}
-
-.checklist-details h4 {
-    font-size: 16px;
-    color: #34495e;
-    margin-bottom: 10px;
-    text-decoration: underline;
-}
-
-.checklist-details table {
+/* Table Styling */
+table {
     width: 100%;
+    max-width: 600px;
     border-collapse: collapse;
-    margin-bottom: 15px;
-}
-
-.checklist-details th,
-.checklist-details td {
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 1px solid #eaeaea;
-}
-
-.checklist-details td {
-    font-size: 14px;
-    color: #5d6d7e;
-}
-
-.checklist-details td:first-child {
-    font-weight: bold;
-}
-
-.checklist-details td:last-child {
-    text-align: right;
-}
-
-.customButton {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
+    margin: 10px auto;
     text-align: center;
 }
+
+
+table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+}
+
+/* Centered Checklist Details */
+.checklist-details {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+
+}
+
+/* Headings */
+h4 {
+    text-align: center;
+    margin-top: 20px;
+    color: #34495e;
+    font-size: 18px;
+    border-left: 4px solid #34495e;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin: 8px 0;
+    padding: 6px 12px;
+}
+
+h5 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 8px 0;
+    padding: 6px 12px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #34495e;
+    border-radius: 4px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h5 strong {
+    color: #34495e;
+    margin-right: 8px;
+}
+
+
+.customButton {
+    background-color: #34495e;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px auto;
+    /* Centers the button horizontally */
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background 0.3s;
+    text-align: center;
+    display: block;
+    /* Ensures the button takes full width available for centering */
+}
+
 
 .customButton:hover {
     background-color: #0056b3;
 }
 
-/* Loading and Error Message */
-p {
+/* Close Button */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
     font-size: 14px;
-    color: #636e72;
-    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
 }
 
-.error-message {
-    color: #e74c3c;
-    font-weight: bold;
+.closeButton:hover {
+    background: darkred;
 }
 
-/* Footer */
-.footer {
-    text-align: center;
-    font-size: 12px;
-    color: #95a5a6;
-    margin-top: 30px;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checklist-details {
+        width: 90%;
+    }
+
+    table {
+        font-size: 14px;
+    }
 }

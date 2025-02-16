@@ -149,7 +149,7 @@ function MonitoringPage() {
                     <div className={styles.checkList}>
                         {/* Add Remarks Button */}
                         <CustomButton
-                            title="CheckList"
+                            title="Handover"
                             handleClick={() => setShowRemarksModal(true)}
                         />
                     </div>

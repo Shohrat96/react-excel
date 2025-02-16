@@ -40,7 +40,9 @@ function ChecklistPage() {
             "Report(s) and/or Request(s) by the Flight Crew for flight(s) in progress",
             "Loss of tracking data for flight(s) in progress",
             "Route Analysis request from Commercial department",
-            "Equipment, Hardware, Software malfunction in the office"
+            "Equipment, Hardware, Software malfunction in the office",
+            "Have the cargo details from Baku and outstations been received?",
+            "Any notes for ATC acknowledgement"
         ]
     };
 
@@ -84,6 +86,7 @@ function ChecklistPage() {
                 <tbody>
                     {predefinedItems.map((item, index) => (
                         <tr key={index}>
+                            <td style={{ fontWeight: "bold", paddingRight: "10px" }}>{index + 1}.</td>
                             <td>{item}</td>
                             <td style={{ fontWeight: "bold" }}>
                                 {apiItems[index] === "yes" ? "✔️ Yes" : apiItems[index] === "no" ? "❌ No" : "⚪ N/A"}
@@ -96,7 +99,7 @@ function ChecklistPage() {
 
         return (
             <div className="checklist-details">
-                <h4>Schedule Operations</h4>
+                <h4>Schedule and Operations</h4>
                 {renderChecklistItems(predefinedChecklist.scheduleOperations, scheduleOperations)}
 
                 <h4>Flight Dispatch</h4>
@@ -105,8 +108,9 @@ function ChecklistPage() {
                 <h4>Special Remark</h4>
                 <table>
                     <tbody>
-                        {remarksHistory.map((remark) => (
+                        {remarksHistory.map((remark, index) => (
                             <tr key={remark.id}>
+                                <td>{index + 1}</td>
                                 <td>{new Date(remark.timestamp).toLocaleString()}</td>
                                 <td>{remark.text}</td>
                             </tr>
@@ -114,7 +118,9 @@ function ChecklistPage() {
                     </tbody>
                 </table>
 
-                <p><strong>Email:</strong> {entry.email}</p>
+                <h5><strong> Dispatcher-Handing Over:</strong> {entry.email}</h5>
+                <h5><strong> Dispatcher-Taking Over:</strong> {entry.dispatchertakingover}</h5>
+
                 {/* PDF Download Button */}
                 <button onClick={() => downloadPDF(entry)} className={styles.customButton}>
                     Download as PDF
@@ -125,103 +131,162 @@ function ChecklistPage() {
 
 
     const downloadPDF = (entry) => {
-        const doc = new jsPDF();
-
-        // Set tighter letter spacing
-        doc.setCharSpace(-0.5); // Adjust the letter spacing to reduce gaps
-
-        // Add Title
-        doc.setFontSize(14); // Smaller font size for the title
-        doc.setFont("helvetica", "bold");
-        doc.text("Checklist Report", 20, 20);
-
-        // Add Checklist Entry Data
-        doc.setFontSize(10); // Smaller font size for entry data
-        doc.setFont("helvetica", "normal");
-        doc.text(`Date: ${new Date(entry.createdAt).toLocaleString()}`, 20, 30);
-        doc.text(`Email: ${entry.email}`, 20, 40);
-
-        // Add Schedule Operations
-        doc.setFontSize(12); // Slightly bigger for sections
-        doc.setFont("helvetica", "bold");
-        doc.text("Schedule Operations:", 20, 50);
-        let yPos = 60;
-
-        predefinedChecklist.scheduleOperations.forEach((item, index) => {
-            doc.setFontSize(10); // Reduce font size for items
-            doc.setFont("helvetica", "normal");
-            const operationStatus =
-                entry.schedule_operations[index] === "yes"
-                    ? "✔️ Yes"
-                    : entry.schedule_operations[index] === "no"
-                        ? "❌ No"
-                        : "⚪ N/A"; // Handle the "n/a" case
-            doc.text(`${item}: ${operationStatus}`, 20, yPos);
-
-            yPos += 6; // Reduce spacing
-            if (yPos > 270) { // Check if we are too close to the bottom of the page
-                doc.addPage();
-                yPos = 20; // Reset the y position on a new page
-            }
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
         });
 
-        // Add Flight Dispatch
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text("Flight Dispatch:", 20, yPos);
-        yPos += 10;
+        // Color palette
+        const colors = {
+            primary: [41, 128, 185],    // Blue
+            secondary: [52, 73, 94],    // Dark Blue-Gray
+            text: [0, 0, 0],            // Black
+            background: [240, 240, 240] // Light Gray
+        };
 
-        predefinedChecklist.flightDispatch.forEach((item, index) => {
-            doc.setFontSize(10); // Smaller font size for items
-            doc.setFont("helvetica", "normal");
-            const dispatchStatus =
-                entry.flight_dispatch[index] === "yes"
-                    ? "✔️ Yes"
-                    : entry.flight_dispatch[index] === "no"
-                        ? "❌ No"
-                        : "⚪ N/A"; // Handle "n/a" or undefined cases
-            doc.text(`${item}: ${dispatchStatus}`, 20, yPos);
-            yPos += 6;
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 20;
-            }
-        });
+        // Page margins
+        const margin = {
+            top: 20,
+            left: 10,
+            right: 20
+        };
 
-        // Add Special Remark
-        if (entry.remarks_history && entry.remarks_history.length > 0) {
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.text("Special Remark:", 20, yPos);
-            yPos += 10;
+        // Function to set text color
+        const setTextColor = (type = 'text') => {
+            doc.setTextColor(...colors[type]);
+        };
 
-            entry.remarks_history.forEach((remark) => {
-                doc.setFontSize(10); // Smaller font size for remarks
-                doc.setFont("helvetica", "normal");
-                const remarkText = `${new Date(remark.timestamp).toLocaleString()}: ${remark.text}`;
-                const remarkLines = doc.splitTextToSize(remarkText, 180); // Split text to fit the page width
-                doc.text(remarkLines, 20, yPos);
-                yPos += remarkLines.length * 6; // Adjust spacing based on number of lines
+        // Function to add section header
+        const addSectionHeader = (text, yPosition) => {
+            doc.setFont('helvetica', 'bold');
+            setTextColor('primary');
+            doc.setFontSize(14);
+            doc.text(text, margin.left, yPosition);
+            doc.setDrawColor(...colors.primary);
+            doc.line(margin.left, yPosition + 2, margin.left + 50, yPosition + 2, 'S');
+            return yPosition + 8;
+        };
+
+        // Function to add section items
+        const addSectionItems = (items, statuses, startY) => {
+            let yPos = startY;
+            doc.setFont('helvetica', 'normal');
+            setTextColor();
+            doc.setFontSize(11);
+
+            items.forEach((item, index) => {
+                const status = statuses[index];
+                const statusColor =
+                    status === 'yes' ? [0, 128, 0] :     // Green
+                        status === 'no' ? [255, 0, 0] :      // Red
+                            [128, 128, 128];                     // Gray
+
+                doc.setTextColor(...statusColor);
+                const statusText =
+                    status === 'yes' ? 'Yes' :
+                        status === 'no' ? 'No' :
+                            ' N/A';
+
+                // Split item text if it's too long
+                const itemLines = doc.splitTextToSize(`${index + 1}.${item}: ${statusText}`, 170);
+                doc.text(itemLines, margin.left, yPos);
+                yPos += itemLines.length * 6;
+
                 if (yPos > 270) {
                     doc.addPage();
-                    yPos = 20;
+                    yPos = margin.top;
                 }
             });
-        } else {
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            doc.text("No special remarks available.", 20, yPos);
-            yPos += 6;
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 20;
-            }
+
+            return yPos;
+        };
+
+        // Start PDF Generation
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        setTextColor('primary');
+        doc.text("Flight Dispatcher Shift Handover Report", margin.left, margin.top);
+
+        // Basic Entry Details  
+        doc.setFont('helvetica', 'bold'); // Use bold for headers  
+        setTextColor();
+        doc.setFontSize(12);
+
+
+
+        // Reset to normal font  
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+
+        // Content  
+        let lineHeight = 7; // Improved line spacing  
+        let yPos = margin.top + 15;
+
+        doc.text(` Date: ${new Date(entry.createdAt).toLocaleString()}`, margin.left, yPos);
+        yPos += lineHeight;
+
+        doc.text(` Dispatcher (Handing Over): ${entry.email}`, margin.left, yPos);
+        yPos += lineHeight;
+
+        doc.text(` Dispatcher (Taking Over): ${entry.dispatchertakingover}`, margin.left, yPos);
+
+        let currentYPosition = yPos + 15; // Next section starts after some spacing
+
+
+
+
+        // Schedule Operations Section
+        currentYPosition = addSectionHeader("Schedule Operations", currentYPosition);
+        currentYPosition = addSectionItems(
+            predefinedChecklist.scheduleOperations,
+            entry.schedule_operations,
+            currentYPosition
+        );
+
+
+        // Flight Dispatch Section
+        currentYPosition += 10;
+        currentYPosition = addSectionHeader("Flight Dispatch", currentYPosition);
+        currentYPosition = addSectionItems(
+            predefinedChecklist.flightDispatch,
+            entry.flight_dispatch,
+            currentYPosition
+        );
+
+        // Special Remarks Section
+        if (entry.remarks_history && entry.remarks_history.length > 0) {
+            currentYPosition += 7;
+            currentYPosition = addSectionHeader("Special Remarks", currentYPosition);
+
+            doc.setFont('helvetica', 'normal');
+            setTextColor();
+            doc.setFontSize(11);
+
+            entry.remarks_history.forEach((remark) => {
+                const remarkText = `${new Date(remark.timestamp).toLocaleString()}: ${remark.text}`;
+                const remarkLines = doc.splitTextToSize(remarkText, 170);
+                doc.text(remarkLines, margin.left, currentYPosition);
+                currentYPosition += remarkLines.length * 5;
+
+                if (currentYPosition > 270) {
+                    doc.addPage();
+                    currentYPosition = margin.top;
+                }
+            });
         }
 
-        // Add footer (optional)
-        doc.setFontSize(8); // Smaller font size for footer
-        doc.setFont("helvetica", "italic");
-        doc.text("Generated on " + new Date().toLocaleString(), 20, yPos);
+
+
+        // Footer
+        doc.setFont('helvetica', 'italic');
+        setTextColor('secondary');
+        doc.setFontSize(10);
+        doc.text(
+            `Generated on ${new Date().toLocaleString()}`,
+            margin.left,
+            doc.internal.pageSize.height - 10
+        );
 
         // Save PDF
         doc.save(`checklist_${entry.id}.pdf`);
@@ -252,7 +317,7 @@ function ChecklistPage() {
 
     return (
         <div>
-            <h2>Checklist Page</h2>
+            <h3 className={styles.title}>FLIGHT DISPATCHER SHIFT HANDOVER FORM</h3>
 
             {/* Search Filters */}
             <div>
@@ -282,9 +347,9 @@ function ChecklistPage() {
                         <h3
                             className="checklist-title"
                             onClick={() => toggleEntry(entry.id)}
-                            style={{ cursor: "pointer", color: "blue" }}
+                            style={{ cursor: "pointer", color: "#34495e" }}
                         >
-                            {expandedEntry === entry.id ? "▼ Checklist " : "► Checklist "} - {entry.createdAt} - {entry.email}
+                            {expandedEntry === entry.id ? "▼ Shift Handover " : "► Shift Handover "} - {entry.createdAt} - {entry.email}
                         </h3>
 
                         {/* Conditionally render details */}
