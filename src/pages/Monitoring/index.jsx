@@ -4,7 +4,7 @@ import { shareFlightsByMembers } from "../../utils/shareFlightsByMembers";
 import CustomButton from "../../components/CustomBtn";
 import uploadFlightList from "../../api/uploadFlightList";
 import getFlightListWithTaf from "../../api/getFlightListWithTaf";
-import useWebSocket from "../../webSocket";
+import useGetFlightsWithData from "../../webSocket";
 import { FLIGHT_TABLE_HEADERS } from "../../types/constants";
 import handleFileUpload from "../../utils/readFlightsFromExcel";
 import CustomFileInput from "../../components/CustomFileInput";
@@ -37,7 +37,7 @@ function MonitoringPage() {
         dispatch(toggleMonitoring(started))
     }, [])
 
-    const { isLoading } = useWebSocket(updateFlightsUI, setLastUpdatedWeather)
+    const { isLoading } = useGetFlightsWithData(updateFlightsUI, setLastUpdatedWeather)
 
     const membersData = useMemo(() => {
         if (searchTerm) {
@@ -57,7 +57,7 @@ function MonitoringPage() {
                     const res = await uploadFlightList(flightList)
                 }
                 const getFlights = await getFlightListWithTaf()
-                const restartSocket = await restartWebsocket()
+                // const restartSocket = await restartWebsocket()
 
                 if (getFlights?.status === 200) {
                     dispatch(setFlightList((getFlights?.data)))
@@ -87,7 +87,7 @@ function MonitoringPage() {
     const flightsTableData = useCallback((data) => {
 
         return data.filter((item) => {
-            if (showAlertsOnly && !item?.isWarning) return false
+            if ((showAlertsOnly && !item?.isWarning) || !item) return false
             return true
         })
 

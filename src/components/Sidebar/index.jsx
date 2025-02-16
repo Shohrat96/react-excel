@@ -3,7 +3,7 @@ import styles from "./Sidebar.module.css"; // Importing CSS module
 
 // Sample icons (you can replace these with your desired icons)
 import { FaPlane, FaCommentDots } from "react-icons/fa";
-import { FaTachometerAlt, FaListAlt } from "react-icons/fa";
+import { FaTachometerAlt, FaListAlt, FaLink } from "react-icons/fa";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
 import { Link, NavLink } from "react-router-dom";
 
@@ -44,6 +44,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           <li className={styles.menuListItem}>
             <FaListAlt className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Handover</span>}
+          </li>
+        </NavLink>
+        <NavLink to="/usefulLinks" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
+          <li className={styles.menuListItem}>
+            <FaLink className={styles.icon} />
+            {!collapsed && <span className={styles.menuTitle}>Useful Links</span>}
           </li>
         </NavLink>
       </ul>

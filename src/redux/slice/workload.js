@@ -16,6 +16,9 @@ const filterFlightsSlice = createSlice({
         setFlightListToFilter: (state, action) => {
             state.flightListToFilter = action.payload;
         },
+        resetState: () => {
+            state = initialState
+        },
         // Action to set the flight list
         setFilteredFlightList: (state, action) => {
             state.filteredFlightList = action.payload;

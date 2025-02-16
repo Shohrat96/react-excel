@@ -5,6 +5,7 @@ import styles from "./RemarksPage.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getRemarksAsync, selectRemarks, setCurrentPage } from "../../redux/slice/remarkSlice";
 import { getAllRemarks } from "../../api/remarks";
+import dayjs from "dayjs";
 
 const RemarksPage = () => {
     const [expanded, setExpanded] = useState([]);
@@ -65,7 +66,7 @@ const RemarksPage = () => {
                                         <td>{remark.flight_number}</td>
                                         <td>{remark.flight_date}</td>
                                         <td>{remark.author}</td>
-                                        <td>{remark.createdAt}</td>
+                                        <td>{dayjs(remark.created_at).format('YYYY-MM-DD HH:mm:ss')}</td>
                                         <td title={remark.remark}>
                                             {remark.remark.length > 50
                                                 ? `${remark.remark.slice(0, 30)}...`
