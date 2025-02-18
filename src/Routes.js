@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import RemarksPage from "./pages/Remarks";
 import Checklist from "./pages/Checklist";
 import UsefulLinks from "./pages/UsefulLinks";
+import Diverted from "./pages/Diverted";
 
 
 
@@ -32,6 +33,7 @@ const AppRoutes = () => (
             <Route path="profile" element={<Profile />} />
             <Route path="checklist" element={<Checklist />} />
             <Route path="usefulLinks" element={<UsefulLinks />} />
+            <Route path="diverted" element={<Diverted />} />
         </Route>
     </Routes>
 );

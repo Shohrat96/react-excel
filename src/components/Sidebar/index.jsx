@@ -4,8 +4,9 @@ import styles from "./Sidebar.module.css"; // Importing CSS module
 // Sample icons (you can replace these with your desired icons)
 import { FaPlane, FaCommentDots } from "react-icons/fa";
 import { FaTachometerAlt, FaListAlt, FaLink } from "react-icons/fa";
+import { FaRandom } from "react-icons/fa";
 import { GoSidebarCollapse, GoSidebarExpand } from "react-icons/go";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
   const toggleSidebar = () => {
@@ -50,6 +51,12 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
           <li className={styles.menuListItem}>
             <FaLink className={styles.icon} />
             {!collapsed && <span className={styles.menuTitle}>Useful Links</span>}
+          </li>
+        </NavLink>
+        <NavLink to="/diverted" className={({ isActive }) => isActive ? `${styles.menuItem} ${styles.active}` : styles.menuItem}>
+          <li className={styles.menuListItem}>
+            <FaRandom className={styles.icon} />
+            {!collapsed && <span className={styles.menuTitle}>Diverted</span>}
           </li>
         </NavLink>
       </ul>
