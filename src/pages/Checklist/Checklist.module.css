@@ -1,14 +1,3 @@
-/* General Page Styling */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f4f4f4;
-    padding: 20px;
-}
-
 .title {
     text-align: center;
     color: #34495e;
@@ -50,7 +39,7 @@
 }
 
 /* Table Styling */
-table {
+.checklistTable {
     width: 100%;
     max-width: 600px;
     border-collapse: collapse;
@@ -59,13 +48,13 @@ table {
 }
 
 
-table td {
+.checklistTable td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
 }
 
-table th {
+.checklistTable th {
     background-color: #007bff;
     color: white;
     padding: 12px;

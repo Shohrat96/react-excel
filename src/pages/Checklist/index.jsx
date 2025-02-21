@@ -82,7 +82,7 @@ function ChecklistPage() {
 
         // Render checklist with values from the API
         const renderChecklistItems = (predefinedItems, apiItems) => (
-            <table>
+            <table className={styles.checklistTable}>
                 <tbody>
                     {predefinedItems.map((item, index) => (
                         <tr key={index}>
@@ -98,15 +98,15 @@ function ChecklistPage() {
         );
 
         return (
-            <div className="checklist-details">
-                <h4>Schedule and Operations</h4>
+            <div className={styles.checklistDetails}>
+                <h4 className={styles.title}>Schedule and Operations</h4>
                 {renderChecklistItems(predefinedChecklist.scheduleOperations, scheduleOperations)}
 
-                <h4>Flight Dispatch</h4>
+                <h4 className={styles.title}>Flight Dispatch</h4>
                 {renderChecklistItems(predefinedChecklist.flightDispatch, flightDispatch)}
 
                 <h4>Special Remark</h4>
-                <table>
+                <table className={styles.checklistTable}>
                     <tbody>
                         {remarksHistory.map((remark, index) => (
                             <tr key={remark.id}>
@@ -223,7 +223,7 @@ function ChecklistPage() {
         let lineHeight = 7; // Improved line spacing  
         let yPos = margin.top + 15;
 
-        doc.text(` Date: ${new Date(entry.createdAt).toLocaleString()}`, margin.left, yPos);
+        doc.text(` Date: ${new Date(entry.created_at).toLocaleString()}`, margin.left, yPos);
         yPos += lineHeight;
 
         doc.text(` Dispatcher (Handing Over): ${entry.email}`, margin.left, yPos);
@@ -232,7 +232,6 @@ function ChecklistPage() {
         doc.text(` Dispatcher (Taking Over): ${entry.dispatchertakingover}`, margin.left, yPos);
 
         let currentYPosition = yPos + 15; // Next section starts after some spacing
-
 
 
 
@@ -342,10 +341,9 @@ function ChecklistPage() {
                 <p>No checklist data found.</p>
             ) : (
                 filteredChecklistData.map((entry) => (
-                    <div key={entry.id} className="checklist-entry">
+                    <div key={entry.id}>
                         {/* Title for the entry */}
                         <h3
-                            className="checklist-title"
                             onClick={() => toggleEntry(entry.id)}
                             style={{ cursor: "pointer", color: "#34495e" }}
                         >
