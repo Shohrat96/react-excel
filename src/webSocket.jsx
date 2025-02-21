@@ -71,6 +71,8 @@ export default useGetFlightsWithData;
 //     wsRef.current.onopen = () => {
 //       setIsLoading(false);
 //       console.log('WebSocket connected');
+//       console.log('WebSocket connected');
+
 //       setError(null);
 //       clearInterval(retryInterval.current);  // Clear retry logic on successful connection
 //     };
