@@ -37,6 +37,7 @@ function RemarksForm({ closeModal }) {
             "Any notes for ATC acknowledgement"
         ],
         dispatcherTakingOver: "",
+        shift: "",
         remarks: "",
         remarksHistory: [] // make sure this is always an array
     });
@@ -45,6 +46,7 @@ function RemarksForm({ closeModal }) {
         scheduleOperations: {},
         flightDispatch: {},
         dispatcherTakingOver: "",
+        shift: "",
     });
 
     const [isRemarksVisible, setRemarksVisible] = useState(false);
@@ -107,6 +109,7 @@ function RemarksForm({ closeModal }) {
             flightDispatch: responses.flightDispatch,
             remarksHistory: checklist.remarksHistory,
             dispatcherTakingOver: checklist.dispatcherTakingOver,
+            shift: checklist.shift,
             email: email,
         };
         console.log("requestData", requestData);
@@ -148,10 +151,12 @@ function RemarksForm({ closeModal }) {
         // Check if all items in scheduleOperations are selected
         const scheduleSelected = checklist.scheduleOperations.every((_, index) => responses.scheduleOperations[index]);
         const flightDispatchSelected = checklist.flightDispatch.every((_, index) => responses.flightDispatch[index]);
-        const dispatcherSelected = checklist.dispatcherTakingOver.trim() !== "";  // Check if dispatcherTakingOver is selected
+        const dispatcherSelected = checklist.dispatcherTakingOver.trim() !== "";
+        const shiftSelected = checklist.shift.trim() !== "";
 
 
-        return scheduleSelected && flightDispatchSelected && dispatcherSelected;
+
+        return scheduleSelected && flightDispatchSelected && dispatcherSelected && shiftSelected;
     };
 
     const ChecklistSection = ({ title, items, section }) => (
@@ -247,22 +252,41 @@ function RemarksForm({ closeModal }) {
                             </div>
                         )}
                     </div>
-                    <h3 >Dispatcher - Taking Over</h3>
-                    <select
-                        className={styles.dispatcherDropdown}
-                        value={checklist.dispatcherTakingOver}
-                        onChange={(e) => setChecklist({ ...checklist, dispatcherTakingOver: e.target.value })}
-                    >
-                        <option value="">Select Dispatcher</option>
-                        <option value="Dispatcher 1">Dispatcher 1</option>
-                        <option value="Dispatcher 2">Dispatcher 2</option>
-                        <option value="Dispatcher 3">Dispatcher 3</option>
-                    </select>
+                    <div className={styles.dropdownContainer}>
+                        <div className={styles.dropdownGroup}>
+                            <h3>Dispatcher - Taking Over</h3>
+                            <select
+                                className={styles.dispatcherDropdown}
+                                value={checklist.dispatcherTakingOver}
+                                onChange={(e) => setChecklist({ ...checklist, dispatcherTakingOver: e.target.value })}
+                            >
+                                <option value="">Select Dispatcher</option>
+                                <option value="Dispatcher 1">Dispatcher 1</option>
+                                <option value="Dispatcher 2">Dispatcher 2</option>
+                                <option value="Dispatcher 3">Dispatcher 3</option>
+                            </select>
+                        </div>
+
+                        <div className={styles.dropdownGroup}>
+                            <h3>Shift Selection</h3>
+                            <select
+                                className={styles.dispatcherDropdown}
+                                value={checklist.shift}
+                                onChange={(e) => setChecklist({ ...checklist, shift: e.target.value })}
+                            >
+                                <option value="">Select Shift</option>
+                                <option value="Day">Day</option>
+                                <option value="Night">Night</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <CustomButton
                         title="Save/ShiftLog"
                         handleClick={handleSave}
                         disabled={!allItemsSelected()}
                     />
+
 
                 </div>
 
