@@ -32,7 +32,7 @@ const FlightsTable = ({ data, headers, member }) => {
     setIsModalOpen(!isModalOpen);
   };
   const handleSubmit = (remarkValue) => {
-    dispatch(addRemarksAsync({ remark: remarkValue.remark, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
+    dispatch(addRemarksAsync({ remark: remarkValue.remark, category: remarkValue.category, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
     toggleModal();
   };
   const [selectedDestinations, setSelectedDestinations] = useState([]);
@@ -162,14 +162,16 @@ const FlightsTable = ({ data, headers, member }) => {
               initialValues={{ remark: "" }}
               validationSchema={Yup.object({
                 remark: Yup.string()
-                  .required("Remark is required")
+                  .required("Remark is required"),
+                category: Yup.string()
+                  .required("Category is required")
               })}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting }) => (
                 <Form>
                   <div className={styles.formGroup}>
-                    <label htmlFor="remark">Remark</label>
+                    <label className={styles.formLabel} htmlFor="remark">Remark</label>
                     <Field
                       name="remark"
                       autoFocus
@@ -181,6 +183,26 @@ const FlightsTable = ({ data, headers, member }) => {
                       component="div"
                       className={styles.error}
                     />
+
+                    {/* Dropdown for Category */}
+                    <div className={styles.formGroup}>
+                      <label className={styles.formLabel} htmlFor="category">Category</label>
+                      <Field
+                        name="category"
+                        as="select"
+                        className={styles.select}
+                      >
+                        <option value="" label="Select a category" />
+                        <option value="WX" label="WX" />
+                        <option value="NOTAM" label="NOTAM" />
+                        <option value="DISPATCH" label="DISPATCH" />
+                      </Field>
+                      <ErrorMessage
+                        name="category"
+                        component="div"
+                        className={styles.error}
+                      />
+                    </div>
                   </div>
                   <button
                     type="submit"

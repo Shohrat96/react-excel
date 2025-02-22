@@ -144,6 +144,10 @@
   font-size: 14px;
 }
 
+.formLabel {
+  margin-bottom: 4px;
+}
+
 .error {
   color: red;
   font-size: 12px;
@@ -163,4 +167,22 @@
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 }
