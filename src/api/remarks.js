@@ -12,11 +12,22 @@ export const addRemark = async (remarkData) => {
     }
 };
 
-export const getAllRemarks = async (page = 1) => {
+
+export const getAllRemarks = async (page = 1, token) => {
     try {
+        if (!token) {
+            throw new Error("Authorization token is missing. Please log in.");
+        }
+
         const response = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}`
+            `${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
+
         return response.data;
     } catch (error) {
         console.error("Error getting remarks data:", error);
