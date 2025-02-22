@@ -164,9 +164,30 @@
 
 
 
+
+
+.dropdownContainer {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 8px;
+    /* Adds space between groups */
+    align-items: center;
+    flex-wrap: wrap;
+    /* Ensures responsiveness */
+}
+
+.dropdownGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+
 .dispatcherDropdown {
-    width: 100%;
-    padding: 10px;
+    min-width: 200px;
+    /* Ensures dropdown has a proper width */
+    padding: 8px;
     font-size: 16px;
     border: 2px solid #ccc;
     border-radius: 8px;
@@ -174,8 +195,6 @@
     transition: all 0.3s ease;
     outline: none;
     cursor: pointer;
-    margin-top: 10px;
-    margin-bottom: 10px;
 }
 
 .dispatcherDropdown:focus {
@@ -185,9 +204,4 @@
 
 .dispatcherDropdown:hover {
     border-color: #555;
-}
-
-.dispatcherDropdown option {
-    font-size: 14px;
-    padding: 10px;
 }

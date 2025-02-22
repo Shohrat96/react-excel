@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
+import dayjs from 'dayjs';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Import CSS for datepicker
 import styles from "./Checklist.module.css";
@@ -117,7 +118,7 @@ function ChecklistPage() {
                         ))}
                     </tbody>
                 </table>
-
+                <h5><strong>Shift/Novbe:</strong> {entry.shift}</h5>
                 <h5><strong> Dispatcher-Handing Over:</strong> {entry.email}</h5>
                 <h5><strong> Dispatcher-Taking Over:</strong> {entry.dispatchertakingover}</h5>
 
@@ -221,15 +222,23 @@ function ChecklistPage() {
 
         // Content  
         let lineHeight = 7; // Improved line spacing  
-        let yPos = margin.top + 15;
+        let yPos = margin.top + 10;
 
-        doc.text(` Date: ${new Date(entry.created_at).toLocaleString()}`, margin.left, yPos);
+        doc.text(
+            `Date: ${new Date(dayjs(entry.created_at).utc().format('YYYY-MM-DD HH:mm:ss')).toLocaleString()}`,
+            margin.left,
+            yPos
+        );
         yPos += lineHeight;
 
-        doc.text(` Dispatcher (Handing Over): ${entry.email}`, margin.left, yPos);
+        doc.text(`Shift: ${entry.shift}`, margin.left, yPos);
+
         yPos += lineHeight;
 
-        doc.text(` Dispatcher (Taking Over): ${entry.dispatchertakingover}`, margin.left, yPos);
+        doc.text(`Dispatcher (Handing Over): ${entry.email}`, margin.left, yPos);
+        yPos += lineHeight;
+
+        doc.text(`Dispatcher (Taking Over): ${entry.dispatchertakingover}`, margin.left, yPos);
 
         let currentYPosition = yPos + 15; // Next section starts after some spacing
 
@@ -296,7 +305,7 @@ function ChecklistPage() {
     const filteredChecklistData = checklistData.filter((entry) => {
         const matchesTime =
             timeSearchQuery === null ||
-            new Date(entry.createdAt).setHours(0, 0, 0, 0) === timeSearchQuery.setHours(0, 0, 0, 0); // Normalize to midnight for comparison
+            new Date(dayjs(entry.created_at).utc().format('YYYY-MM-DD HH:mm:ss')).setHours(0, 0, 0, 0) === timeSearchQuery.setHours(0, 0, 0, 0);
         const matchesEmail = entry.email.toLowerCase().includes(emailSearchQuery.toLowerCase());
 
         return matchesTime && matchesEmail;
@@ -347,7 +356,7 @@ function ChecklistPage() {
                             onClick={() => toggleEntry(entry.id)}
                             style={{ cursor: "pointer", color: "#34495e" }}
                         >
-                            {expandedEntry === entry.id ? "▼ Shift Handover " : "► Shift Handover "} - {entry.createdAt} - {entry.email}
+                            {expandedEntry === entry.id ? "▼ Shift Handover " : "► Shift Handover "} - {dayjs(entry.created_at).utc().format('YYYY-MM-DD HH:mm:ss')} - {entry.email}
                         </h3>
 
                         {/* Conditionally render details */}
