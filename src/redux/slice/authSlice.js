@@ -4,6 +4,7 @@ import loginApi from '../../api/login'; // Import the API function
 const initialState = {
     user: null,
     token: null,
+    refresh_token: null,
     error: null,
     loading: false,
     email: null
@@ -20,6 +21,7 @@ const authSlice = createSlice({
         loginSuccess: (state, action) => {
             state.email = action.payload.email;
             state.token = action.payload.token;
+            state.refresh_token = action.payload.refresh_token;
             state.loading = false;
         },
         loginFailure: (state, action) => {
@@ -29,6 +31,7 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.token = null;
+            state.refresh_token = null;
             state.email = null;
             state.error = null;
             state.loading = false;
@@ -42,7 +45,7 @@ export const login = (credentials) => async (dispatch) => {
     try {
         const data = await loginApi(credentials); // Call the API function
 
-        dispatch(loginSuccess({ email: data.email, token: data.token }));
+        dispatch(loginSuccess({ email: data.email, token: data.token, refresh_token: data.refresh_token }));
     } catch (error) {
         console.log('Error in login:', error);
 

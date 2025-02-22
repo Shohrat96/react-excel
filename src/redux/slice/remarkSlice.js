@@ -70,7 +70,7 @@ export const getRemarksAsync = (page) => async (dispatch, getState) => {
 
     dispatch(setRemarksRequest());
     try {
-        const data = await getAllRemarks(page);
+        const data = await getAllRemarks(page, getState().root.auth.refresh_token); // Call the API function
         dispatch(setRemarksSuccess(data));
     } catch (error) {
         console.log("Error in set remarks:", error);
