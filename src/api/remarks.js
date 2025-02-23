@@ -13,24 +13,41 @@ export const addRemark = async (remarkData) => {
 };
 
 
-export const getAllRemarks = async (page = 1, token) => {
+export const getAllRemarks = async (page = 1, { sortColumn, sortOrder }) => {
     try {
-        if (!token) {
-            throw new Error("Authorization token is missing. Please log in.");
-        }
 
         const response = await axios.get(
-            `${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
+            `${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}&sortColumn=${sortColumn}&sortOrder=${sortOrder}`
         );
 
         return response.data;
     } catch (error) {
         console.error("Error getting remarks data:", error);
+        throw error.response ? error.response.data : error.message;
+    }
+};
+
+export const getAllRemarksFiltered = async (page = 1, filter = {}, { sortColumn, sortOrder }) => {
+    try {
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/remarks/all?page=${page}`, { ...filter, sortColumn, sortOrder });
+        return response.data;
+    } catch (error) {
+        console.error('Error getting filtered remarks:', error);
+        throw error.response ? error.response.data : error.message;
+    }
+
+};
+
+export const getAllRemarkCategories = async () => {
+    try {
+
+        const response = await axios.get(
+            `${process.env.REACT_APP_BASE_URL}/remarks/categories`
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error getting remarks categories:", error);
         throw error.response ? error.response.data : error.message;
     }
 };

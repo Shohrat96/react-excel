@@ -11,16 +11,17 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "../../redux/slice/authSlice";
 import { addRemarksAsync } from "../../redux/slice/remarkSlice";
+import { getAllRemarkCategories } from "../../api/remarks";
+
 
 const FlightsTable = ({ data, headers, member }) => {
   // const [showNAJOnly, setShowNAJOnly] = useState(false);
   const [selectedFlightForRemark, setSelectedFlightForRemark] = useState(null)
+  const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { email } = useSelector(selectAuth);
 
   const dispatch = useDispatch();
-
-  // const [notifications, setNotifications] = useState([]);
 
 
   const toggleModal = (flight) => {
@@ -35,13 +36,11 @@ const FlightsTable = ({ data, headers, member }) => {
     dispatch(addRemarksAsync({ remark: remarkValue.remark, category: remarkValue.category, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
     toggleModal();
   };
-  const [selectedDestinations, setSelectedDestinations] = useState([]);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-  const handleDestinationFilter = (e) => {
-    const options = Array.from(e.target.selectedOptions).map((option) => option.value);
-    setSelectedDestinations(options);
-  };
+  // const handleDestinationFilter = (e) => {
+  //   const options = Array.from(e.target.selectedOptions).map((option) => option.value);
+  //   setSelectedDestinations(options);
+  // };
 
   const tableRef = useRef();
 
@@ -49,6 +48,20 @@ const FlightsTable = ({ data, headers, member }) => {
   // const toggleNAJFilter = () => {
   //   setShowNAJOnly((prev) => !prev);
   // };
+
+  // fetch remark categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllRemarkCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error("Error getting categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Export to XLSX
   const xport = useCallback(() => {
@@ -192,10 +205,12 @@ const FlightsTable = ({ data, headers, member }) => {
                         as="select"
                         className={styles.select}
                       >
-                        <option value="" label="Select a category" />
-                        <option value="WX" label="WX" />
-                        <option value="NOTAM" label="NOTAM" />
-                        <option value="DISPATCH" label="DISPATCH" />
+                        <option value="">Select Category</option>
+                        {categories.map((category, index) => (
+                          <option key={index} value={category.title}>
+                            {category.title}
+                          </option>
+                        ))}
                       </Field>
                       <ErrorMessage
                         name="category"
@@ -206,7 +221,6 @@ const FlightsTable = ({ data, headers, member }) => {
                   </div>
                   <button
                     type="submit"
-                    disabled={isSubmitting}
                     className={styles.submitButton}
                   >
                     Submit
