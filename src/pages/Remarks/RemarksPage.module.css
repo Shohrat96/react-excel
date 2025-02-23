@@ -4,9 +4,11 @@
 
 .title {
     font-size: 24px;
-    margin-bottom: 20px;
     color: #333;
     text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .table {
@@ -20,6 +22,15 @@
     padding: 8px 12px;
     border: 1px solid #ddd;
     text-align: left;
+}
+
+.table th {
+    cursor: pointer;
+    user-select: none;
+}
+
+.table th svg {
+    vertical-align: top;
 }
 
 .primaryRow {
@@ -92,4 +103,10 @@
     background-color: #007bff;
     color: white;
     border-color: #007bff;
+}
+
+.remarksHeader {
+    display: flex;
+    align-items: center;
+    position: relative;
 }

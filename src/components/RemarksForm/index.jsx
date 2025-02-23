@@ -112,8 +112,6 @@ function RemarksForm({ closeModal }) {
             shift: checklist.shift,
             email: email,
         };
-        console.log("requestData", requestData);
-
         try {
             const response = await fetch(`${process.env.REACT_APP_BASE_URL}/checklist/save`, {
                 method: "POST",
