@@ -19,6 +19,8 @@ const FlightsTable = ({ data, headers, member }) => {
   const [selectedFlightForRemark, setSelectedFlightForRemark] = useState(null)
   const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOtherCategory, setIsOtherCategory] = useState(false);
+
   const { email } = useSelector(selectAuth);
 
   const dispatch = useDispatch();
@@ -29,11 +31,12 @@ const FlightsTable = ({ data, headers, member }) => {
       setSelectedFlightForRemark(flight)
     } else {
       setSelectedFlightForRemark(null)
+      setIsOtherCategory(false);
     }
     setIsModalOpen(!isModalOpen);
   };
   const handleSubmit = (remarkValue) => {
-    dispatch(addRemarksAsync({ remark: remarkValue.remark, category: remarkValue.category, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
+    dispatch(addRemarksAsync({ remark: remarkValue.remark, category: remarkValue.category, customCategory: remarkValue?.customCategory, flight_number: selectedFlightForRemark.flight_number, flight_date: selectedFlightForRemark.date, flight_data: selectedFlightForRemark, author: email }));
     toggleModal();
   };
 
@@ -64,12 +67,31 @@ const FlightsTable = ({ data, headers, member }) => {
   }, []);
 
   // Export to XLSX
+  // const xport = useCallback(() => {
+  //   if (!tableRef.current) return;
+  //   const wb = XLSX.utils.table_to_book(tableRef.current);
+  //   XLSX.writeFile(wb, `${member}.xlsx`);
+  // }, [member]);
   const xport = useCallback(() => {
-    if (!tableRef.current) return;
-    const wb = XLSX.utils.table_to_book(tableRef.current);
-    XLSX.writeFile(wb, `${member}.xlsx`);
-  }, [member]);
+    if (!data || data.length === 0) return;
 
+    // Create a new array of objects with only the necessary data
+    const formattedData = data.map((row) => {
+      const newRow = {};
+      Object.keys(headers).forEach((key) => {
+        newRow[headers[key]] = row[key];
+      });
+      return newRow;
+    });
+
+    // Convert JSON to worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Flights Data");
+
+    // Export the Excel file
+    XLSX.writeFile(workbook, `${member}.xlsx`);
+  }, [data, headers, member]);
 
   const validHeaders = typeof headers === "object" && headers !== null;
   const validData = data && data.length > 0;
@@ -172,61 +194,90 @@ const FlightsTable = ({ data, headers, member }) => {
           <div className={styles.modalContent}>
             <h3>Add Remark</h3>
             <Formik
-              initialValues={{ remark: "" }}
+              initialValues={{ remark: "", category: "", customCategory: "" }}
               validationSchema={Yup.object({
                 remark: Yup.string()
                   .required("Remark is required"),
                 category: Yup.string()
-                  .required("Category is required")
+                  .required("Category is required"),
+
+                customCategory: Yup.string().when("category", (category, schema) => {
+                  return category[0] === "OTHER" ? schema.required("Note is required") : schema.notRequired();
+                }),
               })}
               onSubmit={handleSubmit}
             >
-              {({ isSubmitting }) => (
-                <Form>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel} htmlFor="remark">Remark</label>
-                    <Field
-                      name="remark"
-                      autoFocus
-                      as="textarea"
-                      className={styles.textArea}
-                    />
-                    <ErrorMessage
-                      name="remark"
-                      component="div"
-                      className={styles.error}
-                    />
+              {({ isSubmitting, values }) => {
 
-                    {/* Dropdown for Category */}
+                return (
+                  <Form>
                     <div className={styles.formGroup}>
-                      <label className={styles.formLabel} htmlFor="category">Category</label>
+                      <label className={styles.formLabel} htmlFor="remark">Remark</label>
                       <Field
-                        name="category"
-                        as="select"
-                        className={styles.select}
-                      >
-                        <option value="">Select Category</option>
-                        {categories.map((category, index) => (
-                          <option key={index} value={category.title}>
-                            {category.title}
-                          </option>
-                        ))}
-                      </Field>
+                        name="remark"
+                        autoFocus
+                        as="textarea"
+                        className={styles.textArea}
+                      />
                       <ErrorMessage
-                        name="category"
+                        name="remark"
                         component="div"
                         className={styles.error}
                       />
+
+                      {/* Dropdown for Category */}
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel} htmlFor="category">Category</label>
+                        <Field
+                          name="category"
+                          as="select"
+                          className={styles.select}
+                        // onChange={(e) => {
+                        //   setIsOtherCategory(e.target.value === "OTHER")
+                        // }}
+                        >
+                          <option value="">Select Category</option>
+                          {categories.map((category, index) => (
+                            <option key={index} value={category.title}>
+                              {category.title}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="category"
+                          component="div"
+                          className={styles.error}
+                        />
+                      </div>
+
+                      {values?.category === "OTHER" && (
+                        <div className={styles.formGroup}>
+                          <label className={styles.formLabel} htmlFor="customCategory">Custom Category</label>
+                          <Field
+                            name="customCategory"
+                            type="text"
+                            as="textarea"
+                            className={styles.textArea}
+                            placeholder="Enter custom category"
+                          />
+                          <ErrorMessage
+                            name="customCategory"
+                            component="div"
+                            className={styles.error}
+                          />
+                        </div>
+                      )}
+
                     </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className={styles.submitButton}
-                  >
-                    Submit
-                  </button>
-                </Form>
-              )}
+                    <button
+                      type="submit"
+                      className={styles.submitButton}
+                    >
+                      Submit
+                    </button>
+                  </Form>
+                )
+              }}
             </Formik>
           </div>
         </CustomModal>

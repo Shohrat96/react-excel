@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetFlights, selectFlights, setFlightList, setLastUpdate, toggleMonitoring, toggleShowAlertsOnly, setSearchTerm, setFilteredFlightList } from "../../redux/slice/flightsSlice";
 import restartWebsocket from "../../api/restartWebSocket";
 import RemarksForm from "../../components/RemarksForm";
+import CustomLoader from "../../components/CustomLoader";
 
 
 function MonitoringPage() {
@@ -178,7 +179,7 @@ function MonitoringPage() {
 
             {
                 (loading || isLoading) && (
-                    <div className={styles.spinner}></div>
+                    <CustomLoader />
                 )
             }
 
