@@ -9,6 +9,7 @@ import { getAllRemarks } from "../../api/remarks";
 import dayjs from "dayjs";
 import CustomButton from "../../components/CustomBtn";
 import FilterRemarks from "../../components/FilterRemarks";
+import CustomLoader from "../../components/CustomLoader";
 
 const RemarksPage = () => {
     const [expanded, setExpanded] = useState([]);
@@ -21,7 +22,7 @@ const RemarksPage = () => {
 
     const dispatch = useDispatch();
     const remarksState = useSelector(selectRemarks);
-    const { remarks, currentPage, totalPages } = remarksState;
+    const { remarks, currentPage, totalPages, loading: loadingRemarks } = remarksState;
 
     const { filter } = useSelector(selectRemarks);
     const filterSelected = Object.values(filter).some((value) => value !== "");
@@ -89,6 +90,7 @@ const RemarksPage = () => {
                                 <th onClick={() => handleSort("created_at")}>Created At (utc) {sortColumn === "created_at" ? (sortOrder === "asc" ? <FaPlaneDeparture color="#4682B4" size={20} /> : <FaPlaneArrival color="#4682B4" size={20} />) : ""}</th>
                                 <th onClick={() => handleSort("remark")}>Remark {sortColumn === "remark" ? (sortOrder === "asc" ? <FaPlaneDeparture color="#4682B4" size={20} /> : <FaPlaneArrival color="#4682B4" size={20} />) : ""}</th>
                                 <th onClick={() => handleSort("category")}>Category {sortColumn === "category" ? (sortOrder === "asc" ? <FaPlaneDeparture color="#4682B4" size={20} /> : <FaPlaneArrival color="#4682B4" size={20} />) : ""}</th>
+                                <th>Custom Category</th>
                                 <th>Detailed</th>
                             </tr>
                         </thead>
@@ -106,6 +108,7 @@ const RemarksPage = () => {
                                                 : remark.remark}
                                         </td>
                                         <td>{remark.category}</td>
+                                        <td>{remark?.custom_category}</td>
                                         <td>
                                             <button
                                                 className={styles.expandButton}
@@ -117,7 +120,7 @@ const RemarksPage = () => {
                                     </tr>
                                     {expanded.includes(index) && (
                                         <tr className={styles.detailsRow}>
-                                            <td colSpan="7">
+                                            <td colSpan="8">
                                                 <motion.div
                                                     initial={{ height: 0 }}
                                                     animate={{ height: "auto" }}
@@ -179,6 +182,11 @@ const RemarksPage = () => {
                         </button>
                     </div>
                     {showFilterModal && <FilterRemarks onClose={() => setShowFilterModal(false)} /> /* Filter Modal */}
+                    {
+                        loadingRemarks && (
+                            <CustomLoader />
+                        )
+                    }
                 </>
             )}
         </div>

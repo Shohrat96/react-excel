@@ -110,7 +110,7 @@ const WorkloadPage = () => {
                     handleFileUpload(e, (data) => {
                         dispatch(setFlightListToFilter(data));
                         // dispatch(setFilteredFlightList(data));
-                    })
+                    }, { noHeston: true })
                 }} />
                 <SelectInput onSelect={onSelect} disabled={!flightListToFilter?.length} />
             </div>
