@@ -14,10 +14,14 @@ const filterFlightsSlice = createSlice({
     reducers: {
         // Action to set the flight list
         setFlightListToFilter: (state, action) => {
+            state.selectedShift = initialState.selectedShift;
+            state.searchTerm = initialState.searchTerm;
             state.flightListToFilter = action.payload;
+            state.filteredFlightList = initialState.filteredFlightList;
+            state.selectedDestinations = initialState.selectedDestinations;
         },
-        resetState: () => {
-            state = initialState
+        resetState: (state, action) => {
+            // state = initialState
         },
         // Action to set the flight list
         setFilteredFlightList: (state, action) => {
@@ -42,16 +46,15 @@ const filterFlightsSlice = createSlice({
             }, null);
             if (action.payload === "day") {
                 departures = state.flightListToFilter.filter(flight => {
-                    if (flight.origin !== "GYD") return false;
+                    if (flight.flight_number % 2 === 0) return false;
                     const [hours, minutes] = flight.ETD.split(":").map(Number);
                     const etdTime = hours + minutes / 60;
                     return etdTime >= 8 && etdTime < 20 && flight.date === minDate;
                 });
             } else if (action.payload === "night") {
 
-
                 departures = state.flightListToFilter.filter(flight => {
-                    if (flight.origin !== "GYD") return false;
+                    if (flight.flight_number % 2 === 0) return false;
                     const [hours, minutes] = flight.ETD.split(":").map(Number);
                     const etdTime = hours + minutes / 60;
 
@@ -76,7 +79,7 @@ const filterFlightsSlice = createSlice({
                 const returnFlightNumber = String(departureNum + 1).padStart(depFlightStr.length, '0');
 
                 const returnFlight = state.flightListToFilter.find(f =>
-                    f.flight_number === returnFlightNumber && f.date === departure.date
+                    f.flight_number === returnFlightNumber && (f.date === departure.date || f.reg_number === departure.reg_number)
                 );
 
                 return returnFlight ? [departure, returnFlight] : [departure];
@@ -95,7 +98,8 @@ export const {
     setFilteredFlightList,
     setSearchTerm,
     setSelectedDestinations,
-    setSelectedShift
+    setSelectedShift,
+    resetState
 } = filterFlightsSlice.actions;
 
 

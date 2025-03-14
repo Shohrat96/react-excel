@@ -9,7 +9,7 @@ import CustomFileInput from "../../components/CustomFileInput";
 import Dropdown from "../../components/CustomDropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFlights } from "../../redux/slice/flightsSlice";
-import { selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations, setSelectedShift } from "../../redux/slice/workload";
+import { resetState, selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations, setSelectedShift } from "../../redux/slice/workload";
 import RadioButton from "../../components/RadioBtn";
 
 
