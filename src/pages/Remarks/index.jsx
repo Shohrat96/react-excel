@@ -9,7 +9,7 @@ import { getAllRemarks } from "../../api/remarks";
 import dayjs from "dayjs";
 import CustomButton from "../../components/CustomBtn";
 import FilterRemarks from "../../components/FilterRemarks";
-import CustomLoader from "../../components/CustomLoader";
+import CustomLoader from "../../components/CustomLoader/index";
 
 const RemarksPage = () => {
     const [expanded, setExpanded] = useState([]);
