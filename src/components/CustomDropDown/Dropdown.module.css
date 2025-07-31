@@ -48,4 +48,5 @@
 
 .dropdownItem label {
     cursor: pointer;
+    flex: 1;
 }

@@ -16,8 +16,11 @@ const filterFlightsSlice = createSlice({
         setFlightListToFilter: (state, action) => {
             state.flightListToFilter = action.payload;
         },
-        resetState: () => {
-            state = initialState
+        resetState: (state) => {
+            state.filteredFlightList = [];
+            state.searchTerm = "";
+            state.selectedDestinations = [];
+            state.selectedShift = "all";
         },
         // Action to set the flight list
         setFilteredFlightList: (state, action) => {
@@ -31,7 +34,7 @@ const filterFlightsSlice = createSlice({
         },
         setSelectedShift: (state, action) => {
             state.selectedShift = action.payload;
-            state.selectedDestinations = [];
+            // state.selectedDestinations = [];
             state.searchTerm = "";
 
             let departures = [];
@@ -95,7 +98,8 @@ export const {
     setFilteredFlightList,
     setSearchTerm,
     setSelectedDestinations,
-    setSelectedShift
+    setSelectedShift,
+    resetState
 } = filterFlightsSlice.actions;
 
 

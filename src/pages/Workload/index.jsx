@@ -1,20 +1,18 @@
-import { useMemo, useState, useEffect } from "react";
-import SelectInput from "../../components/CustomSelectElement"
-import SingleMember from "../../components/SingleMember";
-import { WORKLOAD_TABLE_HEADERS } from "../../types/constants";
+import React, { useMemo, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectFlightsFilter, setSearchTerm, setSelectedDestinations, setFlightListToFilter, setSelectedShift, resetState } from "../../redux/slice/workload";
 import { shareFlightsByMembers } from "../../utils/shareFlightsByMembers";
-import styles from "./Workload.module.css";
-import handleFileUpload from "../../utils/readFlightsFromExcel";
+import { groupFlightsByLegs } from "../../utils/readFlightsFromExcel";
 import CustomFileInput from "../../components/CustomFileInput";
+import SelectInput from "../../components/CustomSelectElement";
 import Dropdown from "../../components/CustomDropDown";
-import { useDispatch, useSelector } from "react-redux";
-import { selectFlights } from "../../redux/slice/flightsSlice";
-import { selectFlightsFilter, setFilteredFlightList, setFlightListToFilter, setSearchTerm, setSelectedDestinations, setSelectedShift } from "../../redux/slice/workload";
 import RadioButton from "../../components/RadioBtn";
+import SingleMember from "../../components/SingleMember";
+import handleFileUpload from "../../utils/readFlightsFromExcel";
+import { WORKLOAD_TABLE_HEADERS } from "../../types/constants";
+import styles from "./Workload.module.css";
 
-
-const SHIFT_OPTIONS = ["day", "night", "all"]
-
+const SHIFT_OPTIONS = ["day", "night", "all"];
 
 const WorkloadPage = () => {
     const { flightListToFilter, filteredFlightList, searchTerm, selectedDestinations, selectedShift } = useSelector(selectFlightsFilter)
@@ -33,7 +31,6 @@ const WorkloadPage = () => {
         dispatch(setSearchTerm(e.target.value));
     };
 
-
     const filteredData = useMemo(() => {
         if (!flightListToFilter) return null;
         let dataToFilter = flightListToFilter;
@@ -41,7 +38,8 @@ const WorkloadPage = () => {
         if (selectedShift === "day" || selectedShift === "night") {
             dataToFilter = filteredFlightList
         }
-        return dataToFilter.filter(Boolean).filter(row => {
+
+        let filtered = dataToFilter.filter(Boolean).filter(row => {
 
             if (searchTerm) {
                 return Object.values(row).some(value => {
@@ -58,7 +56,30 @@ const WorkloadPage = () => {
 
             return true;
         });
-    }, [flightListToFilter, searchTerm, selectedDestinations]);
+
+        // Ensure all flights have cleaned_flight_number field for grouping
+        const processedFlights = filtered.map(flight => {
+            if (!flight.cleaned_flight_number) {
+                // If cleaned_flight_number doesn't exist, create it from flight_number
+                const rawFlightNumber = flight.flight_number;
+                const cleanedFlightNumber = rawFlightNumber ? rawFlightNumber.toString().replace(/[.A-Za-z]+$/, "").trim() : "";
+                return {
+                    ...flight,
+                    cleaned_flight_number: cleanedFlightNumber
+                };
+            }
+            return flight;
+        });
+
+        console.log('Before grouping:', processedFlights.map(f => ({ flight: f.flight_number, cleaned: f.cleaned_flight_number, date: f.date })));
+
+        // Apply grouping logic to ensure flights are properly paired
+        const grouped = groupFlightsByLegs(processedFlights);
+
+        console.log('After grouping:', grouped.map(f => ({ flight: f.flight_number, cleaned: f.cleaned_flight_number, date: f.date })));
+
+        return grouped;
+    }, [flightListToFilter, filteredFlightList, searchTerm, selectedDestinations, selectedShift]);
 
     const membersData = useMemo(() => {
         if (filteredData?.length > 0) {
@@ -99,7 +120,6 @@ const WorkloadPage = () => {
     };
 
     const handleShiftSelect = (val) => {
-
         dispatch(setSelectedShift(val))
     }
 
@@ -109,8 +129,8 @@ const WorkloadPage = () => {
                 <CustomFileInput handleFileUpload={(e) => {
                     handleFileUpload(e, (data) => {
                         dispatch(setFlightListToFilter(data));
-                        // dispatch(setFilteredFlightList(data));
-                    })
+                        dispatch(resetState())
+                    }, { noHeston: true })
                 }} />
                 <SelectInput onSelect={onSelect} disabled={!flightListToFilter?.length} />
             </div>
