@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import loginApi from '../../api/login'; // Import the API function
+import { resetFlights } from './flightsSlice';
 
 const initialState = {
     user: null,
@@ -57,6 +58,7 @@ export const logoutAsync = () => (dispatch) => {
     localStorage.clear();
 
     dispatch(logout());
+    dispatch(resetFlights());
 };
 
 export const selectAuth = (state) => state.root.auth;

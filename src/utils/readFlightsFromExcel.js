@@ -79,7 +79,7 @@ export const groupFlightsByLegs = (flights) => {
   return groupedFlights;
 };
 
-const handleFileUpload = (e, cb) => {
+const handleFileUpload = (e, cb, config) => {
 
   const files = e.target.files;
   if (!files.length) return;
@@ -96,7 +96,8 @@ const handleFileUpload = (e, cb) => {
         let clearedData = parsedData.filter((item) => {
           return (
             Object.keys(item).length >= 8 &&
-            !item["__EMPTY_4"].includes("LY-")
+            (config?.noHeston ? !item["__EMPTY_4"].includes("LY-") : true)
+
           );
         });
 
