@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFlightsFilter, setSearchTerm, setSelectedDestinations, setFlightListToFilter, setSelectedShift, resetState } from "../../redux/slice/workload";
-import { shareFlightsByMembers } from "../../utils/shareFlightsByMembers";
+import { shareFlightsByMembersWorkload } from "../../utils/shareFlightsByMembers";
 import { groupFlightsByLegs } from "../../utils/readFlightsFromExcel";
 import CustomFileInput from "../../components/CustomFileInput";
 import SelectInput from "../../components/CustomSelectElement";
 import Dropdown from "../../components/CustomDropDown";
 import RadioButton from "../../components/RadioBtn";
 import SingleMember from "../../components/SingleMember";
-import handleFileUpload from "../../utils/readFlightsFromExcel";
+import { handleFileUploadWorkload } from "../../utils/readFlightsFromExcel";
 import { WORKLOAD_TABLE_HEADERS } from "../../types/constants";
 import styles from "./Workload.module.css";
 
@@ -84,7 +84,7 @@ const WorkloadPage = () => {
     const membersData = useMemo(() => {
         if (filteredData?.length > 0) {
 
-            return shareFlightsByMembers(filteredData, members);
+            return shareFlightsByMembersWorkload(filteredData, members);
         }
         return {};
     }, [members, filteredData]);
@@ -127,7 +127,7 @@ const WorkloadPage = () => {
         <div className={styles.container}>
             <div className={styles.fileInputMemberWrapper}>
                 <CustomFileInput handleFileUpload={(e) => {
-                    handleFileUpload(e, (data) => {
+                    handleFileUploadWorkload(e, (data) => {
                         dispatch(setFlightListToFilter(data));
                         dispatch(resetState())
                     }, { noHeston: true })

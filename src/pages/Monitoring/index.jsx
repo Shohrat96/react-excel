@@ -1,12 +1,12 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import dayjs from 'dayjs';
-import { shareFlightsByMembers } from "../../utils/shareFlightsByMembers";
+import { shareFlightsByMembersMonitoring } from "../../utils/shareFlightsByMembers";
 import CustomButton from "../../components/CustomBtn";
 import uploadFlightList from "../../api/uploadFlightList";
 import getFlightListWithTaf from "../../api/getFlightListWithTaf";
 import useGetFlightsWithData from "../../webSocket";
 import { FLIGHT_TABLE_HEADERS } from "../../types/constants";
-import handleFileUpload from "../../utils/readFlightsFromExcel";
+import { handleFileUploadMonitoring } from "../../utils/readFlightsFromExcel";
 import CustomFileInput from "../../components/CustomFileInput";
 import SingleMember from "../../components/SingleMember";
 import styles from "./Monitoring.module.css";
@@ -42,10 +42,10 @@ function MonitoringPage() {
 
     const membersData = useMemo(() => {
         if (searchTerm) {
-            return shareFlightsByMembers(filteredFlights, members)
+            return shareFlightsByMembersMonitoring(filteredFlights, members)
         }
         if (flightList?.length > 0) {
-            return shareFlightsByMembers(flightList, members);
+            return shareFlightsByMembersMonitoring(flightList, members);
         }
         return {};
     }, [members, flightList, searchTerm, filteredFlights]);
@@ -115,7 +115,7 @@ function MonitoringPage() {
                         <CustomFileInput handleFileUpload={(e) => {
                             setMonitoringStarted(false)
                             dispatch(resetFlights())
-                            handleFileUpload(e, data => {
+                            handleFileUploadMonitoring(e, data => {
                                 if (data.length > 0) {
                                     dispatch(setFlightList([...data]))
                                 }
